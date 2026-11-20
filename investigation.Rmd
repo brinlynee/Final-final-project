@@ -1,0 +1,39 @@
+---
+title: "Deprivation and Patient Rates"
+author: "No.1: Chuqing Shi, Zimo Zhou, Shuchen Zhang"
+date: "`11.10`"
+output: html_document
+---
+
+**Note:** You can use this file as you 'working document' where you can try out various investigation ideas and keep notes about your findings. How you use and structure this file is up to you. It is recommended that you keep notes about what you are investigating and what you find as this will make the process of creating your presentation and report easier. Please note that you _do not_ need to submit this file as part of your group project.
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load-lib, message = FALSE}
+library(tidyverse)
+# Add any other libraries here
+
+
+
+```
+
+
+```{r load-data}
+# load your data 
+deprivation <- read_csv("data/deprivation.csv")
+
+deprivation <- deprivation %>%
+  filter(
+    Dataset == "SMR04",
+    HBR == "S92000003",
+    SIMD %in% 1:5
+  )
+
+```
+
+
