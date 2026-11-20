@@ -53,12 +53,77 @@ style_xaringan(
 ```{r}
 
 #tidy data
-merged_data <- dplyr::inner_join(
-  age.sex, 
-  deprivation, 
-  by = c("HBR", "FinancialYear") 
+library(tidyverse)
+
+age_sex <- read_csv("age.sex.csv") %>%
+  filter(
+    HBR == "S92000003",
+    as.integer(substr(FinancialYear, 1, 4)) <= 2023,
+    Dataset == "Total"
+  ) %>%
+  select(FinancialYear, HBR, AgeGroup, Sex, PatientsRates)
+
+deprivation <- read_csv("deprivation.csv") %>%
+  filter(
+    HBR == "S92000003",
+    as.integer(substr(FinancialYear, 1, 4)) <= 2023,
+    Dataset == "Total"
+  ) %>%
+  select(FinancialYear, HBR, SIMD, DischargeRates, PatientsRates)
+
+deprivation_year <- deprivation %>%
+  select(FinancialYear, HBR, SIMD, DischargeRates) %>%
+  mutate(SIMD = paste0("SIMD_", SIMD)) %>%
+  pivot_wider(
+    names_from = SIMD,
+    values_from = DischargeRates,
+    names_prefix = "DR_"
+  ) %>%
+  mutate(
+    MeanDischargeRates = rowMeans(
+      across(starts_with("DR_SIMD_"))
+    ),
+    SIMDGap = DR_SIMD_1 - DR_SIMD_5
+  )
+
+merged_data <- age_sex %>%
+  left_join(
+    deprivation_year,
+    by = c("FinancialYear", "HBR"),
+    relationship = "many-to-one"
+  ) %>%
+  mutate(
+    AgeGroup = factor(
+      AgeGroup,
+      levels = c(
+        "0-17 years",
+        "18-24 years",
+        "25-39 years",
+        "40-64 years",
+        "65plus years"
+      )
+    ),
+    Sex = factor(Sex, levels = c("Female", "Male"))
+  )
+
+View(merged_data)
+
+model_combined <- lm(
+  PatientsRates ~ AgeGroup + Sex +
+    MeanDischargeRates + SIMDGap,
+  data = merged_data
 )
 
+summary(model_combined)
+
+model_deprivation <- lm(
+  PatientsRates ~ factor(SIMD) + DischargeRates,
+  data = deprivation
+)
+
+summary(model_deprivation)
+
+write_csv(merged_data, "merged_mental_health.csv")
 ```
 
 class: center, middle
@@ -281,8 +346,15 @@ $$
 \text{patientrates}_t=\alpha+\beta_1 \cdot \text{SIMD}_t+\beta_2\cdot\text{dischargerates}_t+\beta_3\cdot\text{age}_t+\beta_4\cdot\text{sex}_t
 $$
 ```{r}
-data <- 
+merged_data <- merged_data %>%
+  rename(
+    PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")),
+    DischargeRates = any_of(c("DischargeRates.x", "DischargeRates"))
+  )
 
+model <- lm(PatientsRates ~ DR_SIMD_1 + MeanDischargeRates + AgeGroup + Sex, 
+            data = merged_data, 
+            na.action = na.omit)
 ```
 
 
@@ -294,6 +366,7 @@ t：
 error term：
 
 3.correlation表格+error term：
+
 ```{r}
 # 1. 加载包
 library(dplyr)
