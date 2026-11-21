@@ -428,7 +428,80 @@ ggplot(
 
 4.Correlation Matrix between Variables：
 ```{r}
+library(dplyr)
+library(gt)
+library(tibble)
 
+correlation_data <- merged_data %>%
+  transmute(
+    SIMD = as.numeric(as.character(SIMDGap)),
+    `Patients Rates` = as.numeric(as.character(PatientsRates)),
+    Age = as.numeric(factor(
+      AgeGroup,
+      levels = c(
+        "0-17 years",
+        "18-24 years",
+        "25-39 years",
+        "40-64 years",
+        "65plus years"
+      ),
+      ordered = TRUE
+    )),
+    Sex = ifelse(Sex == "Male", 1, 0),
+    `Discharge Rates` = as.numeric(as.character(MeanDischargeRates))
+  )
+
+cor_matrix <- cor(
+  correlation_data,
+  use = "pairwise.complete.obs",
+  method = "pearson"
+)
+
+cor_matrix[upper.tri(cor_matrix)] <- NA
+
+cor_table <- as.data.frame(cor_matrix) %>%
+  rownames_to_column("Variable")
+
+gt_table <- gt(cor_table) %>%
+  tab_header(
+    title = "A: Correlation Matrix Between Variables"
+  ) %>%
+  fmt_number(
+    columns = -Variable,
+    decimals = 4
+  ) %>%
+  sub_missing(
+    columns = -Variable,
+    missing_text = ""
+  ) %>%
+  cols_label(
+    Variable = ""
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  ) %>%
+  tab_options(
+    table.font.size = px(16)
+  ) %>%
+  tab_style(
+    style = cell_borders(
+      sides = "all",
+      color = "black",
+      weight = px(1)
+    ),
+    locations = cells_body()
+  ) %>%
+  tab_style(
+    style = cell_borders(
+      sides = "all",
+      color = "black",
+      weight = px(1)
+    ),
+    locations = cells_column_labels()
+  )
+
+gt_table
 ```
 
 ---
