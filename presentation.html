@@ -42,96 +42,6 @@ class: center, middle, inverse, title-slide
 
 
 
-```
-## Rows: 15390 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (9): FinancialYear, HBR, HBRQF, AgeGroup, Sex, Dataset, DatasetQF, Disch...
-## dbl (4): DischargeCount, DischargeRates, PatientsCount, PatientsRates
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 6075 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (7): FinancialYear, HBR, HBRQF, Dataset, DatasetQF, HospitalResidentsCou...
-## dbl (7): SIMD, DischargeCount, DischargeRates, PatientsCount, PatientsRates,...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-```
-## # A tibble: 270 × 12
-##    FinancialYear HBR       AgeGroup     Sex    PatientsRates DR_SIMD_1 DR_SIMD_2
-##    &lt;chr&gt;         &lt;chr&gt;     &lt;fct&gt;        &lt;fct&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 1997/98       S92000003 0-17 years   Male            119.     1276.      960.
-##  2 1997/98       S92000003 0-17 years   Female          109.     1276.      960.
-##  3 1997/98       S92000003 18-24 years  Male            617.     1276.      960.
-##  4 1997/98       S92000003 18-24 years  Female          387.     1276.      960.
-##  5 1997/98       S92000003 25-39 years  Male            739.     1276.      960.
-##  6 1997/98       S92000003 25-39 years  Female          510.     1276.      960.
-##  7 1997/98       S92000003 40-64 years  Male            655.     1276.      960.
-##  8 1997/98       S92000003 40-64 years  Female          465.     1276.      960.
-##  9 1997/98       S92000003 65plus years Male           1086.     1276.      960.
-## 10 1997/98       S92000003 65plus years Female         1170.     1276.      960.
-## # ℹ 260 more rows
-## # ℹ 5 more variables: DR_SIMD_3 &lt;dbl&gt;, DR_SIMD_4 &lt;dbl&gt;, DR_SIMD_5 &lt;dbl&gt;,
-## #   MeanDischargeRates &lt;dbl&gt;, SIMDGap &lt;dbl&gt;
-```
-
-```
-## 
-## Call:
-## lm(formula = PatientsRates ~ AgeGroup + Sex + MeanDischargeRates + 
-##     SIMDGap, data = merged_data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -171.40  -58.56   -7.21   52.44  326.68 
-## 
-## Coefficients:
-##                       Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)          113.86874   48.54027   2.346  0.01973 *  
-## AgeGroup18-24 years  291.72500   16.53308  17.645  &lt; 2e-16 ***
-## AgeGroup25-39 years  459.15574   16.53308  27.772  &lt; 2e-16 ***
-## AgeGroup40-64 years  431.86907   16.53308  26.122  &lt; 2e-16 ***
-## AgeGroup65plus years 797.53759   16.53308  48.239  &lt; 2e-16 ***
-## SexMale              105.41326   10.45644  10.081  &lt; 2e-16 ***
-## MeanDischargeRates     0.32179    0.11056   2.911  0.00392 ** 
-## SIMDGap               -0.36813    0.09155  -4.021 7.59e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 85.91 on 262 degrees of freedom
-## Multiple R-squared:  0.9073,	Adjusted R-squared:  0.9048 
-## F-statistic: 366.3 on 7 and 262 DF,  p-value: &lt; 2.2e-16
-```
-
-```
-## 
-## Call:
-## lm(formula = PatientsRates ~ factor(SIMD) + DischargeRates, data = deprivation)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -115.04  -32.83  -11.04   32.58  104.41 
-## 
-## Coefficients:
-##                  Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)     7.853e+02  5.248e+01   14.96   &lt;2e-16 ***
-## factor(SIMD)2  -2.067e+02  1.923e+01  -10.75   &lt;2e-16 ***
-## factor(SIMD)3  -3.475e+02  2.741e+01  -12.68   &lt;2e-16 ***
-## factor(SIMD)4  -4.538e+02  3.382e+01  -13.42   &lt;2e-16 ***
-## factor(SIMD)5  -5.359e+02  3.814e+01  -14.05   &lt;2e-16 ***
-## DischargeRates  3.778e-04  3.944e-02    0.01    0.992    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 46.03 on 129 degrees of freedom
-## Multiple R-squared:  0.9468,	Adjusted R-squared:  0.9447 
-## F-statistic:   459 on 5 and 129 DF,  p-value: &lt; 2.2e-16
-```
 
 
 ---
@@ -193,91 +103,24 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
 
 1.Visualization:
 
-*Patients rates vs. SIMD
+
+&lt;img src="presentation_files/figure-html/simd-boxplot-1.png" alt="" width="75%" /&gt;
 
 
-```
-## Rows: 15390 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (9): FinancialYear, HBR, HBRQF, AgeGroup, Sex, Dataset, DatasetQF, Disch...
-## dbl (4): DischargeCount, DischargeRates, PatientsCount, PatientsRates
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 6075 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (7): FinancialYear, HBR, HBRQF, Dataset, DatasetQF, HospitalResidentsCou...
-## dbl (7): SIMD, DischargeCount, DischargeRates, PatientsCount, PatientsRates,...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-![](presentation_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+---
 
 
-*Patients rates vs. Sex
+&lt;img src="presentation_files/figure-html/unnamed-chunk-3-1.png" alt="" width="85%" /&gt;
 
+---
 
-```
-## Rows: 15390 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (9): FinancialYear, HBR, HBRQF, AgeGroup, Sex, Dataset, DatasetQF, Disch...
-## dbl (4): DischargeCount, DischargeRates, PatientsCount, PatientsRates
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
+&lt;img src="presentation_files/figure-html/unnamed-chunk-4-1.png" alt="" width="85%" /&gt;
 
-![](presentation_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
-
-*Patients rates vs. Age
-
-
-```
-## Rows: 15390 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (9): FinancialYear, HBR, HBRQF, AgeGroup, Sex, Dataset, DatasetQF, Disch...
-## dbl (4): DischargeCount, DischargeRates, PatientsCount, PatientsRates
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-![](presentation_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+---
 
 
 
-2.Form:
-
-
-
-```
-## Rows: 270 Columns: 12
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (4): FinancialYear, HBR, AgeGroup, Sex
-## dbl (8): PatientsRates, DR_SIMD_1, DR_SIMD_2, DR_SIMD_3, DR_SIMD_4, DR_SIMD_...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 6075 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (7): FinancialYear, HBR, HBRQF, Dataset, DatasetQF, HospitalResidentsCou...
-## dbl (7): SIMD, DischargeCount, DischargeRates, PatientsCount, PatientsRates,...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-
-
-Table: Patients Rates by Age Group
+Table: Patient Rates by Age Group
 
 |AgeGroup     |   Mean| Median|    IQR|    Min|     Max|  N|
 |:------------|------:|------:|------:|------:|-------:|--:|
@@ -289,7 +132,7 @@ Table: Patients Rates by Age Group
 
 
 
-Table: Patients Rates by Sex
+Table: Patient Rates by Sex
 
 |Sex    |   Mean| Median|    IQR|   Min|     Max|   N|
 |:------|------:|------:|------:|-----:|-------:|---:|
@@ -309,86 +152,62 @@ Table: Patients Rates by SIMD Quintile
 |    5| 163.35| 152.52|  57.31| 116.27| 240.71| 27|
 
 
-*Patients rates vs. Discharge Rates
 
 
 
-```
-## Rows: 270 Columns: 12
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (4): FinancialYear, HBR, AgeGroup, Sex
-## dbl (8): PatientsRates, DR_SIMD_1, DR_SIMD_2, DR_SIMD_3, DR_SIMD_4, DR_SIMD_...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
+---
 
-![](presentation_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+
+&lt;img src="presentation_files/figure-html/unnamed-chunk-6-1.png" alt="" width="85%" /&gt;
 
 3.Analysis of scatter point:
 
 - Discharge rates and patient rates show a weak negative relationship.
 - Patient rates are highest for ages 65+ and lowest for ages 0–17.
 
+---
 
 4.Conclusion:
 
 *Skewness
-
 - Most groups are right-skewed, with some high-value outliers.
 
 *IQR / Min / Max
-
 - The 25–39 age group has the largest IQR.
 - Males have a larger IQR than females.
 - SIMD 1 has higher patient rates than SIMD 5.
 
 *Prediction for Regression
-
 - We expect age, sex and discharge rates to be related to patient rates.
 - Older age groups and males may have higher patient rates.
 
 *Scatter Plot Trend
-
-X (Independent variable): Mean Discharge Rates
-Y(Dependent variable): Patient Rates
-
+- X (Independent variable): Mean Discharge Rates
+- Y(Dependent variable): Patient Rates
 - The regression line is almost flat, with a slight downward trend.
 - As discharge rates increase, patient rates show little overall change.
 
-
+---
 
 5.Correlation Matrix between Variables：
-
-```
-## 
-## Attaching package: 'gt'
-```
-
-```
-## The following object is masked from 'package:xaringanthemer':
-## 
-##     google_font
-```
-
-<div id="aksaouhhcb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#aksaouhhcb table {
+<div id="uwbgiwtbue" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#uwbgiwtbue table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#aksaouhhcb thead, #aksaouhhcb tbody, #aksaouhhcb tfoot, #aksaouhhcb tr, #aksaouhhcb td, #aksaouhhcb th {
+#uwbgiwtbue thead, #uwbgiwtbue tbody, #uwbgiwtbue tfoot, #uwbgiwtbue tr, #uwbgiwtbue td, #uwbgiwtbue th {
   border-style: none;
 }
 
-#aksaouhhcb p {
+#uwbgiwtbue p {
   margin: 0;
   padding: 0;
 }
 
-#aksaouhhcb .gt_table {
+#uwbgiwtbue .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -414,12 +233,12 @@ Y(Dependent variable): Patient Rates
   border-left-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_caption {
+#uwbgiwtbue .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#aksaouhhcb .gt_title {
+#uwbgiwtbue .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -431,7 +250,7 @@ Y(Dependent variable): Patient Rates
   border-bottom-width: 0;
 }
 
-#aksaouhhcb .gt_subtitle {
+#uwbgiwtbue .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -443,7 +262,7 @@ Y(Dependent variable): Patient Rates
   border-top-width: 0;
 }
 
-#aksaouhhcb .gt_heading {
+#uwbgiwtbue .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -455,13 +274,13 @@ Y(Dependent variable): Patient Rates
   border-right-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_bottom_border {
+#uwbgiwtbue .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_col_headings {
+#uwbgiwtbue .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -476,7 +295,7 @@ Y(Dependent variable): Patient Rates
   border-right-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_col_heading {
+#uwbgiwtbue .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -496,7 +315,7 @@ Y(Dependent variable): Patient Rates
   overflow-x: hidden;
 }
 
-#aksaouhhcb .gt_column_spanner_outer {
+#uwbgiwtbue .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -508,15 +327,15 @@ Y(Dependent variable): Patient Rates
   padding-right: 4px;
 }
 
-#aksaouhhcb .gt_column_spanner_outer:first-child {
+#uwbgiwtbue .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#aksaouhhcb .gt_column_spanner_outer:last-child {
+#uwbgiwtbue .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#aksaouhhcb .gt_column_spanner {
+#uwbgiwtbue .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -528,11 +347,11 @@ Y(Dependent variable): Patient Rates
   width: 100%;
 }
 
-#aksaouhhcb .gt_spanner_row {
+#uwbgiwtbue .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#aksaouhhcb .gt_group_heading {
+#uwbgiwtbue .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -558,7 +377,7 @@ Y(Dependent variable): Patient Rates
   text-align: left;
 }
 
-#aksaouhhcb .gt_empty_group_heading {
+#uwbgiwtbue .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -573,15 +392,15 @@ Y(Dependent variable): Patient Rates
   vertical-align: middle;
 }
 
-#aksaouhhcb .gt_from_md > :first-child {
+#uwbgiwtbue .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#aksaouhhcb .gt_from_md > :last-child {
+#uwbgiwtbue .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#aksaouhhcb .gt_row {
+#uwbgiwtbue .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -600,7 +419,7 @@ Y(Dependent variable): Patient Rates
   overflow-x: hidden;
 }
 
-#aksaouhhcb .gt_stub {
+#uwbgiwtbue .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -613,7 +432,7 @@ Y(Dependent variable): Patient Rates
   padding-right: 5px;
 }
 
-#aksaouhhcb .gt_stub_row_group {
+#uwbgiwtbue .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -627,15 +446,15 @@ Y(Dependent variable): Patient Rates
   vertical-align: top;
 }
 
-#aksaouhhcb .gt_row_group_first td {
+#uwbgiwtbue .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#aksaouhhcb .gt_row_group_first th {
+#uwbgiwtbue .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#aksaouhhcb .gt_summary_row {
+#uwbgiwtbue .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -645,16 +464,16 @@ Y(Dependent variable): Patient Rates
   padding-right: 5px;
 }
 
-#aksaouhhcb .gt_first_summary_row {
+#uwbgiwtbue .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_first_summary_row.thick {
+#uwbgiwtbue .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#aksaouhhcb .gt_last_summary_row {
+#uwbgiwtbue .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -664,7 +483,7 @@ Y(Dependent variable): Patient Rates
   border-bottom-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_grand_summary_row {
+#uwbgiwtbue .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -674,7 +493,7 @@ Y(Dependent variable): Patient Rates
   padding-right: 5px;
 }
 
-#aksaouhhcb .gt_first_grand_summary_row {
+#uwbgiwtbue .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -684,7 +503,7 @@ Y(Dependent variable): Patient Rates
   border-top-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_last_grand_summary_row_top {
+#uwbgiwtbue .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -694,11 +513,11 @@ Y(Dependent variable): Patient Rates
   border-bottom-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_striped {
+#uwbgiwtbue .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#aksaouhhcb .gt_table_body {
+#uwbgiwtbue .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -707,7 +526,7 @@ Y(Dependent variable): Patient Rates
   border-bottom-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_footnotes {
+#uwbgiwtbue .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -721,7 +540,7 @@ Y(Dependent variable): Patient Rates
   border-right-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_footnote {
+#uwbgiwtbue .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -730,7 +549,7 @@ Y(Dependent variable): Patient Rates
   padding-right: 5px;
 }
 
-#aksaouhhcb .gt_sourcenotes {
+#uwbgiwtbue .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -744,7 +563,7 @@ Y(Dependent variable): Patient Rates
   border-right-color: #D3D3D3;
 }
 
-#aksaouhhcb .gt_sourcenote {
+#uwbgiwtbue .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -752,72 +571,72 @@ Y(Dependent variable): Patient Rates
   padding-right: 5px;
 }
 
-#aksaouhhcb .gt_left {
+#uwbgiwtbue .gt_left {
   text-align: left;
 }
 
-#aksaouhhcb .gt_center {
+#uwbgiwtbue .gt_center {
   text-align: center;
 }
 
-#aksaouhhcb .gt_right {
+#uwbgiwtbue .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#aksaouhhcb .gt_font_normal {
+#uwbgiwtbue .gt_font_normal {
   font-weight: normal;
 }
 
-#aksaouhhcb .gt_font_bold {
+#uwbgiwtbue .gt_font_bold {
   font-weight: bold;
 }
 
-#aksaouhhcb .gt_font_italic {
+#uwbgiwtbue .gt_font_italic {
   font-style: italic;
 }
 
-#aksaouhhcb .gt_super {
+#uwbgiwtbue .gt_super {
   font-size: 65%;
 }
 
-#aksaouhhcb .gt_footnote_marks {
+#uwbgiwtbue .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#aksaouhhcb .gt_asterisk {
+#uwbgiwtbue .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#aksaouhhcb .gt_indent_1 {
+#uwbgiwtbue .gt_indent_1 {
   text-indent: 5px;
 }
 
-#aksaouhhcb .gt_indent_2 {
+#uwbgiwtbue .gt_indent_2 {
   text-indent: 10px;
 }
 
-#aksaouhhcb .gt_indent_3 {
+#uwbgiwtbue .gt_indent_3 {
   text-indent: 15px;
 }
 
-#aksaouhhcb .gt_indent_4 {
+#uwbgiwtbue .gt_indent_4 {
   text-indent: 20px;
 }
 
-#aksaouhhcb .gt_indent_5 {
+#uwbgiwtbue .gt_indent_5 {
   text-indent: 25px;
 }
 
-#aksaouhhcb .katex-display {
+#uwbgiwtbue .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#aksaouhhcb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#uwbgiwtbue div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -903,17 +722,18 @@ Represents the residual variance at time t. It captures the unobserved factors, 
 3.Form：
 
 
-```
-##           Variable Coefficient Standard_Error
-##  Alpha (Intercept)     37.6008      (43.7510)
-##               SIMD  -0.8208***       (0.1025)
-##     DischargeRates   1.3797***       (0.1871)
-##   Age: 18-24 years 291.7250***      (15.2686)
-##   Age: 25-39 years 459.1557***      (15.2686)
-##   Age: 40-64 years 431.8691***      (15.2686)
-##  Age: 65plus years 797.5376***      (15.2686)
-##          Sex: Male 105.4133***       (9.6567)
-```
+Table: Regression Results
+
+|Variable          |Coefficient |Standard_Error |
+|:-----------------|:-----------|:--------------|
+|Alpha (Intercept) |37.6008     |(43.7510)      |
+|SIMD              |-0.8208***  |(0.1025)       |
+|DischargeRates    |1.3797***   |(0.1871)       |
+|Age: 18-24 years  |291.7250*** |(15.2686)      |
+|Age: 25-39 years  |459.1557*** |(15.2686)      |
+|Age: 40-64 years  |431.8691*** |(15.2686)      |
+|Age: 65plus years |797.5376*** |(15.2686)      |
+|Sex: Male         |105.4133*** |(9.6567)       |
 
 
 * p &lt; 0.1, ** p &lt; 0.05, *** p &lt; 0.01
@@ -968,13 +788,13 @@ The coefficient for SexMale is 105.4133. Compared to the reference group (Female
 
 The intercept (Alpha) is 37.6008 with a p-value of 0.391. This is not statistically significant, meaning that when all predictors are zero (which is a theoretical baseline), the patient rate is not significantly different from zero. The overall model's Residual Standard Error is 79.34, with an R-squared of 0.9209, indicating the model explains 92.09% of the variance in patient rates.
 
-
+---
 
 5.Model Checking：
 
 
 *残差图：
-![](presentation_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+&lt;img src="presentation_files/figure-html/unnamed-chunk-11-1.png" alt="" width="85%" /&gt;
 
 
 
@@ -1001,7 +821,7 @@ Most observations are clustered within a similar leverage range. However, a few 
 Overall Conclusion：
 Overall, the model explains some of the variation in PatientsRates. However, the diagnostic plots show problems with normality, linearity and constant error variance. HC3 robust standard errors can improve the reliability of the results. Therefore, the model is useful but could be improved further.
 
-
+---
 
 6.conclusion：
 
