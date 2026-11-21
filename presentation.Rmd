@@ -420,6 +420,37 @@ ggplot(
 
 3.Analysis:scatter point:
 
+- Discharge rates and patient rates show a weak negative relationship.
+- Patient rates are highest for ages 65+ and lowest for ages 0–17.
+
+
+
+Conclusion:
+
+
+1. Skewness
+
+- Most groups are right-skewed, with some high-value outliers.
+
+2. IQR / Min / Max
+
+- The 25–39 age group has the largest IQR.
+- Males have a larger IQR than females.
+- SIMD 1 has higher patient rates than SIMD 5.
+
+3. Prediction for Regression
+
+- We expect age, sex and discharge rates to be related to patient rates.
+- Older age groups and males may have higher patient rates.
+
+4. Scatter Plot Trend
+
+X (Independent variable): Mean Discharge Rates
+Y(Dependent variable): Patient Rates
+
+- The regression line is almost flat, with a slight downward trend.
+- As discharge rates increase, patient rates show little overall change.
+
 
 3.Conclusion:
 *Skewness
