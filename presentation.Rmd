@@ -439,6 +439,7 @@ ggplot(
 $$
 \text{patientrates}_t=\alpha+\beta_1 \cdot \text{SIMD}_t+\beta_2\cdot\text{dischargerates}_t+\beta_3\cdot\text{age}_t+\beta_4\cdot\text{sex}_t
 $$
+
 ```{r}
 merged_data <- merged_data %>%
   rename(
@@ -464,82 +465,58 @@ error term：
 ```{r}
 library(dplyr)
 library(broom)
-library(gt)
-clean_data <- merged_data %>%
-  rename(
-    PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")),
-    DischargeRates = any_of("MeanDischargeRates"),
-    SIMD = any_of("DR_SIMD_1") 
-  ) %>%
-  select(HBR, FinancialYear, AgeGroup, Sex, PatientsRates, DischargeRates, SIMD)
-model_full <- lm(PatientsRates ~ SIMD + DischargeRates + AgeGroup + Sex, 
-                 data = clean_data, 
-                 na.action = na.omit)
-tidy_res <- tidy(model_full) %>%
+table_data <- tidy(model_full) %>%
   mutate(
     stars = case_when(
-      p.value < 0.01 ~ "***",
-      p.value < 0.05 ~ "**",
-      p.value < 0.1  ~ "*",
+      p.value < 0.001 ~ "***",
+      p.value < 0.01  ~ "**",
+      p.value < 0.05  ~ "*",
       TRUE ~ ""
     ),
-    coef_text = paste0(round(estimate, 4), stars),
-    se_text = paste0("(", round(std.error, 4), ")"),
-    term = case_when(
+    Display = paste0(round(estimate, 4), stars, "<br>", "(", round(std.error, 4), ")"),
+    Variable = case_when(
       term == "(Intercept)" ~ "Alpha (Intercept)",
+      term == "SIMD" ~ "SIMD",
+      term == "DischargeRates" ~ "DischargeRates",
       grepl("AgeGroup", term) ~ gsub("AgeGroup", "Age: ", term),
       grepl("Sex", term) ~ gsub("Sex", "Sex: ", term),
       TRUE ~ term
     )
-  )
+  ) %>%
+  select(Variable, Display)
+html_output <- paste0(
+  "<table style='border-collapse: collapse; width: 50%; margin: auto; font-family: sans-serif;'>",
+  "<thead>",
+  "<tr style='border-top: 2px solid black; border-bottom: 2px solid black;'>",
+  "<th style='padding: 10px; border-bottom: 1px solid black;'></th>",
+  "<th style='padding: 10px; text-align: center; border-bottom: 1px solid black;'>Patient Rates</th>",
+  "</tr>",
+  "</thead>",
+  "<tbody>"
+)
 
-gt_table <- gt(tidy_res) %>%
-  tab_header(
-    title = md("**Patient Rates**")
-  ) %>%
-  cols_label(
-    term = "",
-    coef_text = "",
-    se_text = ""
-  ) %>%
-  text_transform(
-    locations = cells_body(columns = coef_text),
-    fn = function(x) x
-  ) %>%
-  cols_merge(
-    columns = c(coef_text, se_text),
-    pattern = "{1}<br>{2}"
-  ) %>%
-  cols_hide(columns = c(estimate, std.error, statistic, p.value, stars)) %>%
-  tab_options(
-    table.border.top.color = "black",
-    table.border.bottom.color = "black",
-    table.border.left.color = "black",
-    table.border.right.color = "black",
-    heading.border.bottom.color = "black",
-    column_labels.border.bottom.color = "black",
-    column_labels.border.top.color = "black",
-    table_body.hlines.color = "black",
-    table_body.vlines.color = "black",
-    table.font.size = "16px"
-  ) %>%
-  tab_style(
-    style = cell_borders(sides = "all", color = "black", weight = px(1)),
-    locations = cells_body()
-  ) %>%
-  tab_style(
-    style = cell_borders(sides = "all", color = "black", weight = px(1)),
-    locations = cells_column_labels()
+for (i in 1:nrow(table_data)) {
+  html_output <- paste0(
+    html_output,
+    "<tr style='border-bottom: 1px solid black;'>",
+    "<td style='padding: 10px;'>", table_data$Variable[i], "</td>",
+    "<td style='padding: 10px; text-align: right;'>", table_data$Display[i], "</td>",
+    "</tr>"
   )
-gt_table
+}
+html_output <- paste0(html_output, "</tbody></table>")
+htmltools::browsable(htmltools::HTML(html_output))
 ```
 
 
 * p < 0.1, ** p < 0.05, *** p < 0.01
 
+```{r}
+summary(model_full)
+```
 
 4.Analysis:
-
+The SIMD coefficient is negative (-0.8208), meaning that for every one-unit increase in SIMD, the patient rate decreases by 0.8208. The p-value of 3.79e-15 indicates that this result is statistically significant at the 0.1% level (p < 0.001).
 
 
 
