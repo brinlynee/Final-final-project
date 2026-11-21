@@ -463,49 +463,95 @@ error term：
 3.correlation表格+error term：
 
 ```{r}
-library(dplyr)
-library(broom)
-table_data <- tidy(model_full) %>%
-  mutate(
-    stars = case_when(
-      p.value < 0.001 ~ "***",
-      p.value < 0.01  ~ "**",
-      p.value < 0.05  ~ "*",
-      TRUE ~ ""
-    ),
-    Display = paste0(round(estimate, 4), stars, "<br>", "(", round(std.error, 4), ")"),
-    Variable = case_when(
-      term == "(Intercept)" ~ "Alpha (Intercept)",
-      term == "SIMD" ~ "SIMD",
-      term == "DischargeRates" ~ "DischargeRates",
-      grepl("AgeGroup", term) ~ gsub("AgeGroup", "Age: ", term),
-      grepl("Sex", term) ~ gsub("Sex", "Sex: ", term),
-      TRUE ~ term
-    )
-  ) %>%
-  select(Variable, Display)
-html_output <- paste0(
-  "<table style='border-collapse: collapse; width: 50%; margin: auto; font-family: sans-serif;'>",
-  "<thead>",
-  "<tr style='border-top: 2px solid black; border-bottom: 2px solid black;'>",
-  "<th style='padding: 10px; border-bottom: 1px solid black;'></th>",
-  "<th style='padding: 10px; text-align: center; border-bottom: 1px solid black;'>Patient Rates</th>",
-  "</tr>",
-  "</thead>",
-  "<tbody>"
+merged_data <- read.csv(
+  "merged_mental_health.csv",
+  stringsAsFactors = FALSE
+)
+clean_data <- merged_data[, c(
+  "PatientsRates",
+  "MeanDischargeRates",
+  "SIMDGap",
+  "AgeGroup",
+  "Sex"
+)]
+
+clean_data <- na.omit(clean_data)
+
+clean_data$AgeGroup <- factor(clean_data$AgeGroup)
+clean_data$Sex <- factor(clean_data$Sex)
+model_full <- lm(
+  PatientsRates ~ MeanDischargeRates + SIMDGap +
+    AgeGroup + Sex,
+  data = clean_data
+)
+results <- as.data.frame(
+  summary(model_full)$coefficients
 )
 
-for (i in 1:nrow(table_data)) {
-  html_output <- paste0(
-    html_output,
-    "<tr style='border-bottom: 1px solid black;'>",
-    "<td style='padding: 10px;'>", table_data$Variable[i], "</td>",
-    "<td style='padding: 10px; text-align: right;'>", table_data$Display[i], "</td>",
-    "</tr>"
+results$Variable <- rownames(results)
+results$Stars <- ifelse(
+  results[, 4] < 0.001, "***",
+  ifelse(
+    results[, 4] < 0.01, "**",
+    ifelse(results[, 4] < 0.05, "*", "")
   )
-}
-html_output <- paste0(html_output, "</tbody></table>")
-htmltools::browsable(htmltools::HTML(html_output))
+)
+results$Coefficient <- paste0(
+  sprintf("%.4f", results[, 1]),
+  results$Stars
+)
+
+results$StandardError <- paste0(
+  "(",
+  sprintf("%.4f", results[, 2]),
+  ")"
+)
+
+results$Pvalue <- sprintf("%.4f", results[, 4])
+results$Variable <- sub(
+  "^AgeGroup", "Age: ", results$Variable
+)
+
+results$Variable <- sub(
+  "^Sex", "Sex: ", results$Variable
+)
+
+results$Variable[
+  results$Variable == "(Intercept)"
+] <- "Alpha (Intercept)"
+
+results$Variable[
+  results$Variable == "MeanDischargeRates"
+] <- "Mean Discharge Rates"
+
+results$Variable[
+  results$Variable == "SIMDGap"
+] <- "SIMD Discharge Rate Gap"
+
+# 8. Create final table
+final_table <- results[, c(
+  "Variable",
+  "Coefficient",
+  "StandardError",
+  "Pvalue"
+)]
+
+names(final_table) <- c(
+  "Variable",
+  "Coefficient",
+  "Standard Error",
+  "P-value"
+)
+print(final_table, row.names = FALSE)
+cat(
+  "\nR-squared:",
+  round(summary(model_full)$r.squared, 4),
+  "\nAdjusted R-squared:",
+  round(summary(model_full)$adj.r.squared, 4),
+  "\nN:",
+  nobs(model_full),
+  "\n"
+)
 ```
 
 
