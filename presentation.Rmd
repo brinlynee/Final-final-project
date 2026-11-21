@@ -462,68 +462,84 @@ error term：
 3.correlation表格+error term：
 
 ```{r}
-# 1. 加载包
 library(dplyr)
 library(broom)
 library(gt)
-merged_data <- inner_join(
-  age.sex, 
-  deprivation, 
-  by = c("HBR", "FinancialYear") 
-) %>%
+clean_data <- merged_data %>%
   rename(
-    PatientsRates = PatientsRates.x,
-    DischargeRates = DischargeRates.x,
-    AgeGroup = AgeGroup,
-    Sex = Sex
+    PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")),
+    DischargeRates = any_of("MeanDischargeRates"),
+    SIMD = any_of("DR_SIMD_1") 
   ) %>%
-  select(-ends_with(".y"))
-print(colnames(merged_data))
+  select(HBR, FinancialYear, AgeGroup, Sex, PatientsRates, DischargeRates, SIMD)
 model_full <- lm(PatientsRates ~ SIMD + DischargeRates + AgeGroup + Sex, 
-                 data = merged_data, 
+                 data = clean_data, 
                  na.action = na.omit)
-print(names(coef(model_full)))
-model_table <- tidy(model_full) %>%
+tidy_res <- tidy(model_full) %>%
   mutate(
-    p_value_clean = ifelse(p.value < 0.001, "<0.001", as.character(round(p.value, 4))),
-    Significance = case_when(
-      p.value < 0.001 ~ "***",
-      p.value < 0.01  ~ "**",
-      p.value < 0.05  ~ "*",
-      TRUE            ~ ""
+    stars = case_when(
+      p.value < 0.01 ~ "***",
+      p.value < 0.05 ~ "**",
+      p.value < 0.1  ~ "*",
+      TRUE ~ ""
     ),
-    Estimate_Star = paste0(round(estimate, 4), Significance),
-    Variables = case_when(
-      term == "(Intercept)"    ~ "Alpha (Intercept)",
-      term == "SIMD"           ~ "Beta 1: SIMD",
-      term == "DischargeRates" ~ "Beta 2: Discharge Rates",
-      grepl("AgeGroup", term)  ~ paste0("Beta 3: ", term),
-      grepl("Sex", term)       ~ paste0("Beta 4: ", term),
-      TRUE                     ~ term
+    coef_text = paste0(round(estimate, 4), stars),
+    se_text = paste0("(", round(std.error, 4), ")"),
+    term = case_when(
+      term == "(Intercept)" ~ "Alpha (Intercept)",
+      grepl("AgeGroup", term) ~ gsub("AgeGroup", "Age: ", term),
+      grepl("Sex", term) ~ gsub("Sex", "Sex: ", term),
+      TRUE ~ term
     )
-  ) %>%
-  select(
-    Variables, 
-    `Coefficients (β)` = Estimate_Star, 
-    `Std. Error` = std.error, 
-    `t-value` = statistic, 
-    `p-value` = p_value_clean
   )
-error_info <- summary(model_full)$sigma
-gt_table <- gt(model_table) %>%
+
+gt_table <- gt(tidy_res) %>%
   tab_header(
-    title = md("**Regression Results**"),
-    subtitle = "Dependent Variable: Patient Rates"
+    title = md("**Patient Rates**")
   ) %>%
-  fmt_number(columns = c(`Std. Error`, `t-value`), decimals = 4) %>%
-  tab_source_note(
-    source_note = md(paste0("**Note:** * p<0.05, ** p<0.01, *** p<0.001. Residual Std. Error (Error Term) = ", round(error_info, 4), " on ", df.residual(model_full), " degrees of freedom."))
+  cols_label(
+    term = "",
+    coef_text = "",
+    se_text = ""
   ) %>%
-  tab_options(table.font.size = "16px", table.width = pct(100))
+  text_transform(
+    locations = cells_body(columns = coef_text),
+    fn = function(x) x
+  ) %>%
+  cols_merge(
+    columns = c(coef_text, se_text),
+    pattern = "{1}<br>{2}"
+  ) %>%
+  cols_hide(columns = c(estimate, std.error, statistic, p.value, stars)) %>%
+  tab_options(
+    table.border.top.color = "black",
+    table.border.bottom.color = "black",
+    table.border.left.color = "black",
+    table.border.right.color = "black",
+    heading.border.bottom.color = "black",
+    column_labels.border.bottom.color = "black",
+    column_labels.border.top.color = "black",
+    table_body.hlines.color = "black",
+    table_body.vlines.color = "black",
+    table.font.size = "16px"
+  ) %>%
+  tab_style(
+    style = cell_borders(sides = "all", color = "black", weight = px(1)),
+    locations = cells_body()
+  ) %>%
+  tab_style(
+    style = cell_borders(sides = "all", color = "black", weight = px(1)),
+    locations = cells_column_labels()
+  )
 gt_table
 ```
 
+
+* p < 0.1, ** p < 0.05, *** p < 0.01
+
+
 4.Analysis:
+
 
 
 
