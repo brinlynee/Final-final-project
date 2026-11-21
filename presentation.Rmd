@@ -34,11 +34,11 @@ library(broom)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
+  echo = FALSE,       
   dev = "ragg_png",
   dpi = 150,
   fig.width = 6, 
-  fig.asp = 0.618, 
-  out.width = "80%" 
+  fig.asp = 0.618
 )
 options(bitmapType = "cairo")
 ```
