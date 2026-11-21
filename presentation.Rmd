@@ -140,8 +140,7 @@ class: inverse, center, middle
 
 #  Introduction 
 
-通过研究影响Patients rates的因素，可以帮助苏格兰政府有针对性地对精神病潜在患者进行干预（如：潜在患者的性别，年龄，贫困程度等），减少精神病发病率。
-
+Investigating the factors influencing patient rates can assist the Scottish Government in implementing targeted interventions for potential mental health patients (e.g., based on gender, age, and level of deprivation). This will help reduce the incidence of mental illness.
 
 ---
 
@@ -227,6 +226,8 @@ ggplot(plot_deprivation,
   theme_minimal() +
   theme(legend.position = "none")
 ```
+
+
 ```{r}
 library(tidyverse)
 
@@ -301,11 +302,7 @@ ggplot(age_plot,
 
 ```{r}
 library(tidyverse)
-age_sex <- read_csv("age.sex.csv")
-deprivation <- read_csv("deprivation.csv")
-ggplot(age.sex,
-       aes(x = DischargeRates,
-           y = PatientsRates)) +
+ggplot(merged_data, aes(x = MeanDischargeRates, y = PatientsRates)) +
   geom_point(
     color = "#457B9D",
     size = 2.5,
@@ -326,6 +323,7 @@ ggplot(age.sex,
 ```
 
 3.Analysis:scatter point:
+
 
 3.Conclusion:
 *Skewness
