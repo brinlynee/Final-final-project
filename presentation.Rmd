@@ -126,15 +126,6 @@ summary(model_deprivation)
 write_csv(merged_data, "merged_mental_health.csv")
 ```
 
-class: center, middle
-
-## Goal:Investigating which factor can influence the patients rates
-
----
-
-class: inverse, center, middle
-
-# Introduction,Data overview,Exploratory Data Analysis,Methodology,Results,Conclusion
 
 ---
 
@@ -146,6 +137,7 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
 
 
 # Data Overview
+
 
 ```{r}
 library(knitr)
@@ -183,12 +175,17 @@ knitr::kable(
 ```
 
 
-
-
 ---
 
+
+
 # Exploratory Data Analysis
+
+
 1.Visualization:
+
+*Patients rates vs. SIMD
+
 ```{r}
 library(tidyverse)
 age_sex <- read_csv("age.sex.csv")
@@ -227,6 +224,8 @@ ggplot(plot_deprivation,
   theme(legend.position = "none")
 ```
 
+
+*Patients rates vs. Sex
 
 ```{r}
 library(tidyverse)
@@ -539,6 +538,7 @@ gt_table
 ---
 
 #Methodology：
+
 1.Regression Model:
 $$
 \text{patientrates}_t=\alpha+\beta_1 \cdot \text{SIMD}_t+\beta_2\cdot\text{dischargerates}_t+\beta_3\cdot\text{age}_t+\beta_4\cdot\text{sex}_t
@@ -643,7 +643,7 @@ print(final_table, row.names = FALSE)
 summary(model_full)
 ```
 
-4.Analysis:
+4.Results：
 
 The SIMD coefficient is negative (-0.8208), meaning that for every one-unit increase in SIMD, the patient rate decreases by 0.8208. The p-value of 3.79e-15 indicates that this result is statistically significant at the 0.1% level (p < 0.001).
 
@@ -665,7 +665,9 @@ The coefficient for SexMale is 105.4133. Compared to the reference group (Female
 The intercept (Alpha) is 37.6008 with a p-value of 0.391. This is not statistically significant, meaning that when all predictors are zero (which is a theoretical baseline), the patient rate is not significantly different from zero. The overall model's Residual Standard Error is 79.34, with an R-squared of 0.9209, indicating the model explains 92.09% of the variance in patient rates.
 
 
+
 5.Model Checking：
+
 
 *残差图：
 ```{r}
@@ -683,40 +685,37 @@ par(mfrow = c(1, 1))
 ```
 
 
-```{r}
 
-```
+*分析残差图：
 
+Residual Diagnostics of the Multiple Linear Regression Model
 
-*算R方
-
-
-
-6.conclusion(结合p-value 残差图 adjusted R方看模型的表现)：
-# Residual Diagnostics of the Multiple Linear Regression Model
-
-## 1. Residuals vs Fitted Plot
-
+Residuals vs Fitted Plot：
 Most residuals are distributed around the zero line, which suggests that the model can explain some of the variation in PatientsRates. However, the red line is not completely horizontal, and some residuals are relatively large. This suggests that the model may not fully capture the relationship between the variables.
 
-## 2. Normal Q-Q Plot
 
+Normal Q-Q Plot：
 Most points follow the general pattern of the reference line. However, some points deviate from the line, especially at both ends. This suggests that the residuals may not follow a normal distribution.
 
-## 3. Scale-Location Plot
 
+Scale-Location Plot：
 The red line shows a slight upward trend, and the spread of the points is not completely consistent. This suggests that the model has a heteroscedasticity problem, meaning that the error variance is not constant. HC3 robust standard errors can help improve the reliability of the statistical results.
 
-## 4. Residuals vs Leverage Plot
 
+Residuals vs Leverage Plot：
 Most observations are clustered within a similar leverage range. However, a few points have higher leverage or larger residuals. These observations may influence the model, so they should be checked using Cook's Distance.
 
-## 5. Overall Conclusion
 
+Overall Conclusion：
 Overall, the model explains some of the variation in PatientsRates. However, the diagnostic plots show problems with normality, linearity and constant error variance. HC3 robust standard errors can improve the reliability of the results. Therefore, the model is useful but could be improved further.
 
 
-7.Reduced Model:
+
+7.conclusion(结合p-value 残差图 adjusted R方看模型的表现)：
+
+
+
+8.Reduced Model:
 *
 *Correlation表格+error term+p-value+model checking
 
