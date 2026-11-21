@@ -569,6 +569,19 @@ The SIMD coefficient is negative (-0.8208), meaning that for every one-unit incr
 5.Model Checking：
 
 *残差图：
+```{r}
+model_merged <- lm(
+  PatientsRates ~ AgeGroup + Sex +
+    MeanDischargeRates + SIMDGap,
+  data = merged_data
+)
+
+par(mfrow = c(2, 2))
+
+plot(model_merged, which = c(1, 2, 3, 5))
+
+par(mfrow = c(1, 1))
+```
 
 
 ```{r}
@@ -581,6 +594,27 @@ The SIMD coefficient is negative (-0.8208), meaning that for every one-unit incr
 
 
 6.conclusion(结合p-value 残差图 adjusted R方看模型的表现)：
+# Residual Diagnostics of the Multiple Linear Regression Model
+
+## 1. Residuals vs Fitted Plot
+
+Most residuals are distributed around the zero line, which suggests that the model can explain some of the variation in PatientsRates. However, the red line is not completely horizontal, and some residuals are relatively large. This suggests that the model may not fully capture the relationship between the variables.
+
+## 2. Normal Q-Q Plot
+
+Most points follow the general pattern of the reference line. However, some points deviate from the line, especially at both ends. This suggests that the residuals may not follow a normal distribution.
+
+## 3. Scale-Location Plot
+
+The red line shows a slight upward trend, and the spread of the points is not completely consistent. This suggests that the model has a heteroscedasticity problem, meaning that the error variance is not constant. HC3 robust standard errors can help improve the reliability of the statistical results.
+
+## 4. Residuals vs Leverage Plot
+
+Most observations are clustered within a similar leverage range. However, a few points have higher leverage or larger residuals. These observations may influence the model, so they should be checked using Cook's Distance.
+
+## 5. Overall Conclusion
+
+Overall, the model explains some of the variation in PatientsRates. However, the diagnostic plots show problems with normality, linearity and constant error variance. HC3 robust standard errors can improve the reliability of the results. Therefore, the model is useful but could be improved further.
 
 
 7.Reduced Model:
