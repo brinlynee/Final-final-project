@@ -463,95 +463,73 @@ error term：
 3.correlation表格+error term：
 
 ```{r}
-merged_data <- read.csv(
-  "merged_mental_health.csv",
-  stringsAsFactors = FALSE
-)
-clean_data <- merged_data[, c(
-  "PatientsRates",
-  "MeanDischargeRates",
-  "SIMDGap",
-  "AgeGroup",
-  "Sex"
-)]
+library(dplyr)
 
-clean_data <- na.omit(clean_data)
+merged_data <- read.csv("merged_mental_health.csv")
 
-clean_data$AgeGroup <- factor(clean_data$AgeGroup)
-clean_data$Sex <- factor(clean_data$Sex)
+clean_data <- merged_data %>%
+  rename(
+    PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")),
+    DischargeRates = any_of("MeanDischargeRates"),
+    SIMD = any_of("DR_SIMD_1")
+  ) %>%
+  select(HBR, FinancialYear, AgeGroup, Sex,
+         PatientsRates, DischargeRates, SIMD)
+
 model_full <- lm(
-  PatientsRates ~ MeanDischargeRates + SIMDGap +
-    AgeGroup + Sex,
-  data = clean_data
-)
-results <- as.data.frame(
-  summary(model_full)$coefficients
+  PatientsRates ~ SIMD + DischargeRates + AgeGroup + Sex,
+  data = clean_data,
+  na.action = na.omit
 )
 
-results$Variable <- rownames(results)
-results$Stars <- ifelse(
-  results[, 4] < 0.001, "***",
+coef_table <- summary(model_full)$coefficients
+
+table_data <- data.frame(
+  Variable = rownames(coef_table),
+  Coefficient = coef_table[, 1],
+  Standard_Error = coef_table[, 2],
+  P_value = coef_table[, 4],
+  row.names = NULL
+)
+
+table_data$Stars <- ifelse(
+  table_data$P_value < 0.01, "***",
   ifelse(
-    results[, 4] < 0.01, "**",
-    ifelse(results[, 4] < 0.05, "*", "")
+    table_data$P_value < 0.05, "**",
+    ifelse(table_data$P_value < 0.1, "*", "")
   )
 )
-results$Coefficient <- paste0(
-  sprintf("%.4f", results[, 1]),
-  results$Stars
+
+table_data$Coefficient <- paste0(
+  sprintf("%.4f", table_data$Coefficient),
+  table_data$Stars
 )
 
-results$StandardError <- paste0(
+table_data$Standard_Error <- paste0(
   "(",
-  sprintf("%.4f", results[, 2]),
+  sprintf("%.4f", table_data$Standard_Error),
   ")"
 )
 
-results$Pvalue <- sprintf("%.4f", results[, 4])
-results$Variable <- sub(
-  "^AgeGroup", "Age: ", results$Variable
+table_data$Variable <- sub(
+  "^AgeGroup", "Age: ", table_data$Variable
 )
 
-results$Variable <- sub(
-  "^Sex", "Sex: ", results$Variable
+table_data$Variable <- sub(
+  "^Sex", "Sex: ", table_data$Variable
 )
 
-results$Variable[
-  results$Variable == "(Intercept)"
+table_data$Variable[
+  table_data$Variable == "(Intercept)"
 ] <- "Alpha (Intercept)"
 
-results$Variable[
-  results$Variable == "MeanDischargeRates"
-] <- "Mean Discharge Rates"
-
-results$Variable[
-  results$Variable == "SIMDGap"
-] <- "SIMD Discharge Rate Gap"
-
-# 8. Create final table
-final_table <- results[, c(
+final_table <- table_data[, c(
   "Variable",
   "Coefficient",
-  "StandardError",
-  "Pvalue"
+  "Standard_Error"
 )]
 
-names(final_table) <- c(
-  "Variable",
-  "Coefficient",
-  "Standard Error",
-  "P-value"
-)
 print(final_table, row.names = FALSE)
-cat(
-  "\nR-squared:",
-  round(summary(model_full)$r.squared, 4),
-  "\nAdjusted R-squared:",
-  round(summary(model_full)$adj.r.squared, 4),
-  "\nN:",
-  nobs(model_full),
-  "\n"
-)
 ```
 
 
@@ -562,8 +540,25 @@ summary(model_full)
 ```
 
 4.Analysis:
+
 The SIMD coefficient is negative (-0.8208), meaning that for every one-unit increase in SIMD, the patient rate decreases by 0.8208. The p-value of 3.79e-15 indicates that this result is statistically significant at the 0.1% level (p < 0.001).
 
+
+The coefficient for DischargeRates is positive (1.3797). This indicates a positive relationship: for every one-unit increase in discharge rates, the patient rate increases by approximately 1.3797. The p-value of 2.20e-12 is less than 0.001, demonstrating high statistical significance.
+
+
+Compared to the reference group (0-17 years), all older age groups show a significantly higher patient rate. Specifically:
+The 18-24 years group shows an increase of 291.7250 (p < 0.001).
+The 25-39 years group shows an increase of 459.1557 (p < 0.001).
+The 40-64 years group shows an increase of 431.8691 (p < 0.001).
+The 65plus years group has the highest increase of 797.5376 (p < 0.001).
+All age coefficients are highly significant at the 0.1% level.
+
+
+The coefficient for SexMale is 105.4133. Compared to the reference group (Female), the male patient rate is significantly higher by approximately 105.4133 patients per 100,000 population. The p-value of < 2e-16 indicates this is highly statistically significant at the 0.1% level.
+
+
+The intercept (Alpha) is 37.6008 with a p-value of 0.391. This is not statistically significant, meaning that when all predictors are zero (which is a theoretical baseline), the patient rate is not significantly different from zero. The overall model's Residual Standard Error is 79.34, with an R-squared of 0.9209, indicating the model explains 92.09% of the variance in patient rates.
 
 
 5.Model Checking：
