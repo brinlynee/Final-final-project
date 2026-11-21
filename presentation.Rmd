@@ -713,9 +713,12 @@ Overall, the model explains some of the variation in PatientsRates. However, the
 
 
 
-6.conclusion(结合p-value 残差图 adjusted R方看模型的表现)：
+6.conclusion：
 
+Overall Model Performance:
+The regression model demonstrates an excellent overall fit, with an Adjusted R-squared of 0.9188, meaning the predictors explain approximately 91.88% of the variance in patient rates. The overall model is highly significant (F-test p-value < 2.2e-16), and almost all individual predictors (SIMD, DischargeRates, AgeGroup, and Sex) are significant at the 0.1% level. The residual standard error is 79.34.
 
+However, the diagnostic plots indicate some deviations from standard assumptions. The Residuals vs Fitted plot shows a slight non-linear pattern (a curved red line) rather than random scatter, and the Q-Q plot shows slight deviations in the tails. This suggests that while the model's predictive power is very strong, there might be complex non-linear relationships or outliers within the data that could be further explored.
 
 7..Reduced Model:
 *
