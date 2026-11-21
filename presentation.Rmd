@@ -303,12 +303,8 @@ ggplot(age_plot,
 ```{r}
 library(tidyverse)
 library(knitr)
-
-# Load data
 merged_data <- read_csv("merged_mental_health.csv")
 deprivation <- read_csv("deprivation.csv")
-
-# 1. PR by Age Group
 age_summary <- merged_data %>%
   filter(is.finite(PatientsRates)) %>%
   group_by(AgeGroup) %>%
@@ -327,8 +323,6 @@ kable(
   caption = "Patients Rates by Age Group"
 )
 
-
-# 2. PR by Sex
 sex_summary <- merged_data %>%
   filter(is.finite(PatientsRates)) %>%
   group_by(Sex) %>%
@@ -346,9 +340,6 @@ kable(
   sex_summary,
   caption = "Patients Rates by Sex"
 )
-
-
-# 3. PR by SIMD
 simd_summary <- deprivation %>%
   filter(
     Dataset == "SMR04",
