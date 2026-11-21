@@ -291,7 +291,7 @@ ggplot(age_plot,
 
 
 
-2.Analysis：通过表格展现每一个变量与PR间的mean，median，IQR，min,max,N
+2.Form:
 
 
 ```{r}
@@ -417,32 +417,30 @@ ggplot(
   theme_minimal()
 ```
 
-3.Analysis:scatter point:
+3.Analysis of scatter point:
 
 - Discharge rates and patient rates show a weak negative relationship.
 - Patient rates are highest for ages 65+ and lowest for ages 0–17.
 
 
+4.Conclusion:
 
-Conclusion:
-
-
-1. Skewness
+*Skewness
 
 - Most groups are right-skewed, with some high-value outliers.
 
-2. IQR / Min / Max
+*IQR / Min / Max
 
 - The 25–39 age group has the largest IQR.
 - Males have a larger IQR than females.
 - SIMD 1 has higher patient rates than SIMD 5.
 
-3. Prediction for Regression
+*Prediction for Regression
 
 - We expect age, sex and discharge rates to be related to patient rates.
 - Older age groups and males may have higher patient rates.
 
-4. Scatter Plot Trend
+*Scatter Plot Trend
 
 X (Independent variable): Mean Discharge Rates
 Y(Dependent variable): Patient Rates
@@ -450,12 +448,6 @@ Y(Dependent variable): Patient Rates
 - The regression line is almost flat, with a slight downward trend.
 - As discharge rates increase, patient rates show little overall change.
 
-
-4.Conclusion:
-*Skewness
-*IQR/min/max:
-*为regression做准备：
-*针对散点图：看趋势（在散点上加线）
 
 
 5.Correlation Matrix between Variables：
@@ -560,12 +552,21 @@ model <- lm(PatientsRates ~ DR_SIMD_1 + MeanDischargeRates + AgeGroup + Sex,
 
 
 2.解释系数：
-埃尔法：
-贝塔：
-t：
-error term：
 
-3.correlation表格+error term：
+Alpha (α):
+Represents the intercept of the regression model. It is the expected value of the dependent variable at time t when all independent variables are equal to zero.
+
+Beta（β₁ to β₄）：
+Represent the regression coefficients (or marginal effects).β₁ to β₄ measure the expected change in the dependent variable for a one-unit change in the corresponding independent variable at time 
+t, holding all other variables constant.
+
+t (Time subscript):
+Represents the specific time period (e.g., a specific Financial Year) for which the observation is recorded. The subscript t indicates that the variables are measured at a specific point in time, meaning this is time-series or panel data.
+
+Error term (ε_t):
+Represents the residual variance at time t. It captures the unobserved factors, random shocks, or measurement errors that affect the dependent variable at that specific time period but are not included in the model.
+
+3.Form：
 
 ```{r}
 library(dplyr)
@@ -712,11 +713,11 @@ Overall, the model explains some of the variation in PatientsRates. However, the
 
 
 
-7.conclusion(结合p-value 残差图 adjusted R方看模型的表现)：
+6.conclusion(结合p-value 残差图 adjusted R方看模型的表现)：
 
 
 
-8.Reduced Model:
+7..Reduced Model:
 *
 *Correlation表格+error term+p-value+model checking
 
