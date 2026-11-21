@@ -295,6 +295,79 @@ ggplot(age_plot,
 
 2.Analysis：通过表格展现每一个变量与PR间的mean，median，IQR，min,max,N
 
+```{r}
+library(tidyverse)
+library(knitr)
+
+# Load data
+merged_data <- read_csv("merged_mental_health.csv")
+deprivation <- read_csv("deprivation.csv")
+
+# 1. PR by Age Group
+age_summary <- merged_data %>%
+  filter(is.finite(PatientsRates)) %>%
+  group_by(AgeGroup) %>%
+  summarise(
+    Mean = round(mean(PatientsRates), 2),
+    Median = round(median(PatientsRates), 2),
+    IQR = round(IQR(PatientsRates), 2),
+    Min = round(min(PatientsRates), 2),
+    Max = round(max(PatientsRates), 2),
+    N = n(),
+    .groups = "drop"
+  )
+
+kable(
+  age_summary,
+  caption = "Patients Rates by Age Group"
+)
+
+
+# 2. PR by Sex
+sex_summary <- merged_data %>%
+  filter(is.finite(PatientsRates)) %>%
+  group_by(Sex) %>%
+  summarise(
+    Mean = round(mean(PatientsRates), 2),
+    Median = round(median(PatientsRates), 2),
+    IQR = round(IQR(PatientsRates), 2),
+    Min = round(min(PatientsRates), 2),
+    Max = round(max(PatientsRates), 2),
+    N = n(),
+    .groups = "drop"
+  )
+
+kable(
+  sex_summary,
+  caption = "Patients Rates by Sex"
+)
+
+
+# 3. PR by SIMD
+simd_summary <- deprivation %>%
+  filter(
+    Dataset == "SMR04",
+    HBR == "S92000003",
+    SIMD %in% 1:5,
+    is.finite(PatientsRates)
+  ) %>%
+  group_by(SIMD) %>%
+  summarise(
+    Mean = round(mean(PatientsRates), 2),
+    Median = round(median(PatientsRates), 2),
+    IQR = round(IQR(PatientsRates), 2),
+    Min = round(min(PatientsRates), 2),
+    Max = round(max(PatientsRates), 2),
+    N = n(),
+    .groups = "drop"
+  )
+
+kable(
+  simd_summary,
+  caption = "Patients Rates by SIMD Quintile"
+)
+
+```
 
 
 
@@ -302,22 +375,45 @@ ggplot(age_plot,
 
 ```{r}
 library(tidyverse)
-ggplot(merged_data, aes(x = MeanDischargeRates, y = PatientsRates)) +
+
+# 1. Load merged dataset
+merged_data <- read_csv("merged_mental_health.csv")
+
+# 2. Remove missing values
+merged_data <- merged_data %>%
+  filter(
+    !is.na(AgeGroup),
+    is.finite(MeanDischargeRates),
+    is.finite(PatientsRates)
+  )
+
+# 3. Scatter plot with regression line
+ggplot(
+  merged_data,
+  aes(
+    x = MeanDischargeRates,
+    y = PatientsRates,
+    color = AgeGroup
+  )
+) +
   geom_point(
-    color = "#457B9D",
     size = 2.5,
     alpha = 0.6
   ) +
   geom_smooth(
+    aes(group = 1),
     method = "lm",
     formula = y ~ x,
     color = "red",
-    se = FALSE
+    se = FALSE,
+    linewidth = 1
   ) +
   labs(
     title = "Relationship Between Discharge Rates and Patient Rates",
-    x = "Discharges per 100,000 Population",
-    y = "Patients per 100,000 Population"
+    subtitle = "Comparison Across Age Groups in Scotland",
+    x = "Mean Discharge Rates per 100,000 Population",
+    y = "Patients per 100,000 Population",
+    color = "Age Group"
   ) +
   theme_minimal()
 ```
