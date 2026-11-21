@@ -247,6 +247,7 @@ ggplot(age.sex,
   theme(legend.position = "none")
 ```
 
+*Patients rates vs. Age
 
 ```{r}
 library(tidyverse)
@@ -290,9 +291,8 @@ ggplot(age_plot,
 
 
 
-
-
 2.Analysis：通过表格展现每一个变量与PR间的mean，median，IQR，min,max,N
+
 
 ```{r}
 library(tidyverse)
@@ -369,7 +369,7 @@ kable(
 ```
 
 
-
+*Patients rates vs. Discharge Rates
 
 
 ```{r}
@@ -420,13 +420,14 @@ ggplot(
 3.Analysis:scatter point:
 
 
-3.Conclusion:
+4.Conclusion:
 *Skewness
 *IQR/min/max:
 *为regression做准备：
 *针对散点图：看趋势（在散点上加线）
 
-4.Correlation Matrix between Variables：
+
+5.Correlation Matrix between Variables：
 ```{r}
 library(dplyr)
 library(gt)
