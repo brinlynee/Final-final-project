@@ -33,14 +33,16 @@ library(broom)
 ```
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(
-  echo = FALSE,       
-  dev = "ragg_png",
-  dpi = 150,
-  fig.width = 6, 
-  fig.asp = 0.618
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 8,
+  fig.height = 4.5,
+  out.width = "85%"
 )
-options(bitmapType = "cairo")
+
 ```
 
 ```{r load-data, include=FALSE}
@@ -56,7 +58,7 @@ style_xaringan(
 )
 ```
 
-```{r}
+```{r prepare-data, include=FALSE}
 
 #tidy data
 library(tidyverse)
@@ -190,9 +192,8 @@ knitr::kable(
 
 1.Visualization:
 
-*Patients rates vs. SIMD
 
-```{r}
+```{r,simd-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%"}
 library(tidyverse)
 age_sex <- read_csv("age.sex.csv")
 deprivation <- read_csv("deprivation.csv")
@@ -207,9 +208,9 @@ plot_deprivation <- deprivation %>%
     SIMD = factor(SIMD, levels = 1:5)
   )
 ggplot(plot_deprivation,
-       aes(x = SIMD,
-           y = PatientsRates,
-           fill = SIMD)) +
+                 aes(x = SIMD,
+                     y = PatientsRates,
+                     fill = SIMD)) +
   geom_boxplot(alpha = 0.7) +
   scale_fill_manual(
     values = c(
@@ -231,9 +232,10 @@ ggplot(plot_deprivation,
 ```
 
 
-*Patients rates vs. Sex
+---
 
-```{r}
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(tidyverse)
 
 age.sex <- read_csv("age.sex.csv")
@@ -253,9 +255,9 @@ ggplot(age.sex,
   theme(legend.position = "none")
 ```
 
-*Patients rates vs. Age
+---
 
-```{r}
+```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(tidyverse)
 age.sex <- read_csv("age.sex.csv")
 age_plot <- age.sex %>%
@@ -295,12 +297,10 @@ ggplot(age_plot,
   )
 ```
 
+---
 
 
-2.Form:
-
-
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(tidyverse)
 library(knitr)
 merged_data <- read_csv("merged_mental_health.csv")
@@ -318,9 +318,9 @@ age_summary <- merged_data %>%
     .groups = "drop"
   )
 
-kable(
+knitr::kable(
   age_summary,
-  caption = "Patients Rates by Age Group"
+  caption = "Patient Rates by Age Group"
 )
 
 sex_summary <- merged_data %>%
@@ -336,9 +336,9 @@ sex_summary <- merged_data %>%
     .groups = "drop"
   )
 
-kable(
+knitr::kable(
   sex_summary,
-  caption = "Patients Rates by Sex"
+  caption = "Patient Rates by Sex"
 )
 simd_summary <- deprivation %>%
   filter(
@@ -366,10 +366,14 @@ kable(
 ```
 
 
-*Patients rates vs. Discharge Rates
 
 
-```{r}
+
+---
+
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(tidyverse)
 merged_data <- read_csv("merged_mental_health.csv")
 merged_data <- merged_data %>%
@@ -413,33 +417,29 @@ ggplot(
 - Discharge rates and patient rates show a weak negative relationship.
 - Patient rates are highest for ages 65+ and lowest for ages 0–17.
 
+---
 
 4.Conclusion:
 
 *Skewness
-
 - Most groups are right-skewed, with some high-value outliers.
 
 *IQR / Min / Max
-
 - The 25–39 age group has the largest IQR.
 - Males have a larger IQR than females.
 - SIMD 1 has higher patient rates than SIMD 5.
 
 *Prediction for Regression
-
 - We expect age, sex and discharge rates to be related to patient rates.
 - Older age groups and males may have higher patient rates.
 
 *Scatter Plot Trend
-
-X (Independent variable): Mean Discharge Rates
-Y(Dependent variable): Patient Rates
-
+- X (Independent variable): Mean Discharge Rates
+- Y(Dependent variable): Patient Rates
 - The regression line is almost flat, with a slight downward trend.
 - As discharge rates increase, patient rates show little overall change.
 
-
+---
 
 5.Correlation Matrix between Variables：
 ```{r}
@@ -626,7 +626,10 @@ final_table <- table_data[, c(
   "Standard_Error"
 )]
 
-print(final_table, row.names = FALSE)
+knitr::kable(
+  final_table,
+  caption = "Regression Results"
+)
 ```
 
 
@@ -657,7 +660,7 @@ The coefficient for SexMale is 105.4133. Compared to the reference group (Female
 
 The intercept (Alpha) is 37.6008 with a p-value of 0.391. This is not statistically significant, meaning that when all predictors are zero (which is a theoretical baseline), the patient rate is not significantly different from zero. The overall model's Residual Standard Error is 79.34, with an R-squared of 0.9209, indicating the model explains 92.09% of the variance in patient rates.
 
-
+---
 
 5.Model Checking：
 
@@ -702,7 +705,7 @@ Most observations are clustered within a similar leverage range. However, a few 
 Overall Conclusion：
 Overall, the model explains some of the variation in PatientsRates. However, the diagnostic plots show problems with normality, linearity and constant error variance. HC3 robust standard errors can improve the reliability of the results. Therefore, the model is useful but could be improved further.
 
-
+---
 
 6.conclusion：
 
