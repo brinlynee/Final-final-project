@@ -33,8 +33,14 @@ library(broom)
 ```
 
 ```{r setup, include=FALSE}
-# For better figure resolution
-knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618, out.width = "80%")
+knitr::opts_chunk$set(
+  dev = "ragg_png",
+  dpi = 150,
+  fig.width = 6, 
+  fig.asp = 0.618, 
+  out.width = "80%" 
+)
+options(bitmapType = "cairo")
 ```
 
 ```{r load-data, include=FALSE}
@@ -106,7 +112,7 @@ merged_data <- age_sex %>%
     Sex = factor(Sex, levels = c("Female", "Male"))
   )
 
-View(merged_data)
+print(merged_data)
 
 model_combined <- lm(
   PatientsRates ~ AgeGroup + Sex +
@@ -297,12 +303,8 @@ ggplot(age_plot,
 ```{r}
 library(tidyverse)
 library(knitr)
-
-# Load data
 merged_data <- read_csv("merged_mental_health.csv")
 deprivation <- read_csv("deprivation.csv")
-
-# 1. PR by Age Group
 age_summary <- merged_data %>%
   filter(is.finite(PatientsRates)) %>%
   group_by(AgeGroup) %>%
@@ -321,8 +323,6 @@ kable(
   caption = "Patients Rates by Age Group"
 )
 
-
-# 2. PR by Sex
 sex_summary <- merged_data %>%
   filter(is.finite(PatientsRates)) %>%
   group_by(Sex) %>%
@@ -340,9 +340,6 @@ kable(
   sex_summary,
   caption = "Patients Rates by Sex"
 )
-
-
-# 3. PR by SIMD
 simd_summary <- deprivation %>%
   filter(
     Dataset == "SMR04",
@@ -374,19 +371,13 @@ kable(
 
 ```{r}
 library(tidyverse)
-
-# 1. Load merged dataset
 merged_data <- read_csv("merged_mental_health.csv")
-
-# 2. Remove missing values
 merged_data <- merged_data %>%
   filter(
     !is.na(AgeGroup),
     is.finite(MeanDischargeRates),
     is.finite(PatientsRates)
   )
-
-# 3. Scatter plot with regression line
 ggplot(
   merged_data,
   aes(
