@@ -134,12 +134,36 @@ summary(model_deprivation)
 write_csv(merged_data, "merged_mental_health.csv")
 ```
 
+class: intro-layout
 
----
+# Introduction
 
-#  Introduction 
+<style>
+.intro-layout .pull-left img {
+  width: 100%;
+  height: 500px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+.intro-layout .pull-left,
+.intro-layout .pull-right {
+  margin-top: -20px;
+}
+.intro-layout .pull-right {
+  font-size: 26px;
+  line-height: 1.5;
+}
+</style>
 
+.pull-left[
+<img src="img/introduction picture.jpg">
+]
+
+.pull-right[
 Investigating the factors influencing patient rates can assist the Scottish Government in implementing targeted interventions for potential mental health patients (e.g., based on gender, age, and level of deprivation). This will help reduce the incidence of mental illness.
+]
+
+
 
 ---
 
@@ -182,18 +206,28 @@ knitr::kable(
 )
 ```
 
-
 ---
 
-
+class: middle
 
 # Exploratory Data Analysis
 
+<style>
+.remark-slide-content table {
+  width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 
+.remark-slide-content table th,
+.remark-slide-content table td {
+  font-size: 18px !important;
+  padding: 5px 7px !important;
+  line-height: 1.15 !important;
+}
+</style>
 
-
-
-```{r,simd-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%"}
+```{r simd-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
 age_sex <- read_csv("age.sex.csv")
 deprivation <- read_csv("deprivation.csv")
@@ -235,7 +269,27 @@ ggplot(plot_deprivation,
 ---
 
 
-```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
+class: middle
+
+# Exploratory Data Analysis
+
+<style>
+.remark-slide-content table {
+  width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.remark-slide-content table th,
+.remark-slide-content table td {
+  font-size: 18px !important;
+  padding: 5px 7px !important;
+  line-height: 1.15 !important;
+}
+</style>
+
+
+```{r sex-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
 
 age.sex <- read_csv("age.sex.csv")
@@ -257,7 +311,28 @@ ggplot(age.sex,
 
 ---
 
-```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
+
+class: middle
+
+# Exploratory Data Analysis
+
+<style>
+.remark-slide-content table {
+  width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.remark-slide-content table th,
+.remark-slide-content table td {
+  font-size: 18px !important;
+  padding: 5px 7px !important;
+  line-height: 1.15 !important;
+}
+</style>
+
+
+```{r age-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
 age.sex <- read_csv("age.sex.csv")
 age_plot <- age.sex %>%
@@ -297,8 +372,26 @@ ggplot(age_plot,
   )
 ```
 
+---
+class: middle
 
+<style>
+.remark-slide-content.large-summary {
+  padding: 12px 24px !important;
+}
 
+.remark-slide-content.large-summary table {
+  width: 100% !important;
+  font-size: 24px !important;
+}
+
+.remark-slide-content.large-summary th,
+.remark-slide-content.large-summary td {
+  font-size: 24px !important;
+  padding: 7px 10px !important;
+  line-height: 1.2 !important;
+}
+</style>
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(dplyr)
@@ -455,7 +548,26 @@ ggplot(
 
 ---
 
+<style>
+.remark-slide-content.correlation-slide table {
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+.remark-slide-content.correlation-slide caption {
+  font-size: 30px !important;
+}
+
+.remark-slide-content.correlation-slide th,
+.remark-slide-content.correlation-slide td {
+  font-size: 30px !important;
+  padding: 12px 7px !important;
+  line-height: 1.25 !important;
+}
+</style>
+
 5.Correlation Matrix between Variables：
+
 ```{r}
 library(dplyr)
 library(gt)
@@ -510,9 +622,14 @@ gt_table <- gt(cor_table) %>%
     align = "center",
     columns = everything()
   ) %>%
-  tab_options(
-    table.font.size = px(16)
-  ) %>%
+tab_options(
+  table.width = pct(100),
+  table.align = "center",
+  table.font.size = px(26),
+  column_labels.font.size = px(24),
+  data_row.padding = px(15),
+  heading.title.font.size = px(32)
+) %>%
   tab_style(
     style = cell_borders(
       sides = "all",
@@ -646,7 +763,6 @@ knitr::kable(
 )
 ```
 
-
 * p < 0.1, ** p < 0.05, *** p < 0.01
 
 ```{r}
@@ -657,9 +773,7 @@ summary(model_full)
 
 The SIMD coefficient is negative (-0.8208), meaning that for every one-unit increase in SIMD, the patient rate decreases by 0.8208. The p-value of 3.79e-15 indicates that this result is statistically significant at the 0.1% level (p < 0.001).
 
-
 The coefficient for DischargeRates is positive (1.3797). This indicates a positive relationship: for every one-unit increase in discharge rates, the patient rate increases by approximately 1.3797. The p-value of 2.20e-12 is less than 0.001, demonstrating high statistical significance.
-
 
 Compared to the reference group (0-17 years), all older age groups show a significantly higher patient rate. Specifically:
 The 18-24 years group shows an increase of 291.7250 (p < 0.001).
@@ -668,16 +782,13 @@ The 40-64 years group shows an increase of 431.8691 (p < 0.001).
 The 65plus years group has the highest increase of 797.5376 (p < 0.001).
 All age coefficients are highly significant at the 0.1% level.
 
-
 The coefficient for SexMale is 105.4133. Compared to the reference group (Female), the male patient rate is significantly higher by approximately 105.4133 patients per 100,000 population. The p-value of < 2e-16 indicates this is highly statistically significant at the 0.1% level.
-
 
 The intercept (Alpha) is 37.6008 with a p-value of 0.391. This is not statistically significant, meaning that when all predictors are zero (which is a theoretical baseline), the patient rate is not significantly different from zero. The overall model's Residual Standard Error is 79.34, with an R-squared of 0.9209, indicating the model explains 92.09% of the variance in patient rates.
 
 ---
 
 5.Model Checking：
-
 
 *残差图：
 ```{r}
@@ -694,28 +805,20 @@ plot(model_merged, which = c(1, 2, 3, 5))
 par(mfrow = c(1, 1))
 ```
 
-
-
-*分析残差图：
-
+---
 Residual Diagnostics of the Multiple Linear Regression Model
 
 Residuals vs Fitted Plot：
 Most residuals are distributed around the zero line. However, the red line shows some fluctuations and is not completely horizontal. There are also some relatively large residuals. This suggests that the model may not fully capture the linear relationship between the variables.
 
-
 Normal Q-Q Plot：
 Most points follow the general pattern of the reference line. However, several points deviate from the line, especially in the upper tail. This suggests that the residuals may not fully follow a normal distribution.
-
-
 
 Scale-Location Plot：
 The red line shows a slight upward trend, especially at higher fitted values. The spread of the points is not completely consistent across the fitted values. This suggests that the model may have a heteroscedasticity problem, meaning that the error variance is not constant. HC3 robust standard errors can help improve the reliability of statistical inference.
 
-
 Residuals vs Leverage Plot：
 Most observations are clustered within a similar leverage range. However, a few observations have relatively higher leverage or larger standardized residuals. These observations may influence the model, so they should be further examined using Cook's Distance.
-
 
 Overall Conclusion：
 Overall, the model explains some of the variation in PatientsRates. However, the diagnostic plots suggest potential problems with linearity, normality and constant error variance. The Residuals vs Fitted Plot shows some fluctuations, suggesting that the model may not fully capture the relationship between the variables. The Normal Q-Q Plot indicates that some residuals deviate from the reference line, particularly in the upper tail, suggesting that the residuals may not follow a normal distribution. The Scale-Location Plot shows a slight upward trend, indicating possible heteroscedasticity. In addition, the Residuals vs Leverage Plot identifies a few observations with relatively high leverage or large standardized residuals, which should be further examined using Cook's Distance. HC3 robust standard errors can help improve the reliability of statistical inference, particularly when heteroscedasticity is present. Therefore, the model is useful but could be improved further.
@@ -729,8 +832,8 @@ The regression model demonstrates an excellent overall fit, with an Adjusted R-s
 
 However, the diagnostic plots indicate some deviations from standard assumptions. The Residuals vs Fitted plot shows a slight non-linear pattern (a curved red line) rather than random scatter, and the Q-Q plot shows slight deviations in the tails. This suggests that while the model's predictive power is very strong, there might be complex non-linear relationships or outliers within the data that could be further explored.
 
-7..Reduced Model:
-*
+7.Reduced Model:
+
 *Correlation表格+error term+p-value+model checking
 
 
