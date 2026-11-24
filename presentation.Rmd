@@ -91,7 +91,7 @@ deprivation_year <- deprivation %>%
     MeanDischargeRates = rowMeans(
       across(starts_with("DR_SIMD_"))
     ),
-    SIMDGap = DR_SIMD_1 - DR_SIMD_5
+    DR_SIMD_1 = DR_SIMD_1 - DR_SIMD_5
   )
 
 merged_data <- age_sex %>%
@@ -118,7 +118,7 @@ print(merged_data)
 
 model_combined <- lm(
   PatientsRates ~ AgeGroup + Sex +
-    MeanDischargeRates + SIMDGap,
+    MeanDischargeRates + DR_SIMD_1,
   data = merged_data
 )
 
@@ -297,7 +297,7 @@ ggplot(age_plot,
   )
 ```
 
----
+
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
@@ -449,7 +449,7 @@ library(tibble)
 
 correlation_data <- merged_data %>%
   transmute(
-    SIMD = as.numeric(as.character(SIMDGap)),
+    SIMD = as.numeric(as.character(DR_SIMD_1)),
     `Patients Rates` = as.numeric(as.character(PatientsRates)),
     Age = as.numeric(factor(
       AgeGroup,
@@ -669,7 +669,7 @@ The intercept (Alpha) is 37.6008 with a p-value of 0.391. This is not statistica
 ```{r}
 model_merged <- lm(
   PatientsRates ~ AgeGroup + Sex +
-    MeanDischargeRates + SIMDGap,
+    MeanDischargeRates + DR_SIMD_1,
   data = merged_data
 )
 
