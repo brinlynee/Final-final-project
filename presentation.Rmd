@@ -301,68 +301,82 @@ ggplot(age_plot,
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
-library(tidyverse)
-library(knitr)
-merged_data <- read_csv("merged_data.csv")
-deprivation <- read_csv("deprivation.csv")
-age_summary <- merged_data %>%
-  filter(is.finite(PatientsRates)) %>%
-  group_by(AgeGroup) %>%
+library(dplyr)
+library(tidyr)
+library(htmltools)
+calc_stats <- function(data, group_var, var_name) {
+  data %>%
+    group_by(Group = as.character(.data[[group_var]])) %>%
+    summarise(
+      Mean = round(mean(PatientsRates, na.rm = TRUE), 2),
+      Median = round(median(PatientsRates, na.rm = TRUE), 2),
+      IQR = round(IQR(PatientsRates, na.rm = TRUE), 2),
+      Min = round(min(PatientsRates, na.rm = TRUE), 2),
+      Max = round(max(PatientsRates, na.rm = TRUE), 2),
+      N = n(), .groups = 'drop'
+    ) %>%
+    mutate(`Grouping Variable` = var_name) %>%
+    select(`Grouping Variable`, Group, Mean, Median, IQR, Min, Max, N)
+}
+
+clean_patients <- merged_data %>% rename(PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")))
+
+simd_stats <- clean_patients %>%
+  select(PatientsRates, starts_with("DR_SIMD")) %>%
+  pivot_longer(cols = starts_with("DR_SIMD"), names_to = "SIMD_Level", values_to = "SIMD_Value") %>%
+  mutate(SIMD_Level = gsub("DR_SIMD_", "", SIMD_Level)) %>%
+  group_by(Group = SIMD_Level) %>%
   summarise(
-    Mean = round(mean(PatientsRates), 2),
-    Median = round(median(PatientsRates), 2),
-    IQR = round(IQR(PatientsRates), 2),
-    Min = round(min(PatientsRates), 2),
-    Max = round(max(PatientsRates), 2),
-    N = n(),
-    .groups = "drop"
-  )
-
-knitr::kable(
-  age_summary,
-  caption = "Patient Rates by Age Group"
-)
-
-sex_summary <- merged_data %>%
-  filter(is.finite(PatientsRates)) %>%
-  group_by(Sex) %>%
-  summarise(
-    Mean = round(mean(PatientsRates), 2),
-    Median = round(median(PatientsRates), 2),
-    IQR = round(IQR(PatientsRates), 2),
-    Min = round(min(PatientsRates), 2),
-    Max = round(max(PatientsRates), 2),
-    N = n(),
-    .groups = "drop"
-  )
-
-knitr::kable(
-  sex_summary,
-  caption = "Patient Rates by Sex"
-)
-simd_summary <- deprivation %>%
-  filter(
-    Dataset == "SMR04",
-    HBR == "S92000003",
-    SIMD %in% 1:5,
-    is.finite(PatientsRates)
+    Mean = round(mean(PatientsRates, na.rm = TRUE), 2),
+    Median = round(median(PatientsRates, na.rm = TRUE), 2),
+    IQR = round(IQR(PatientsRates, na.rm = TRUE), 2),
+    Min = round(min(PatientsRates, na.rm = TRUE), 2),
+    Max = round(max(PatientsRates, na.rm = TRUE), 2),
+    N = n(), .groups = 'drop'
   ) %>%
-  group_by(SIMD) %>%
-  summarise(
-    Mean = round(mean(PatientsRates), 2),
-    Median = round(median(PatientsRates), 2),
-    IQR = round(IQR(PatientsRates), 2),
-    Min = round(min(PatientsRates), 2),
-    Max = round(max(PatientsRates), 2),
-    N = n(),
-    .groups = "drop"
-  )
+  mutate(`Grouping Variable` = "SIMD (Levels 1-5)") %>%
+  select(`Grouping Variable`, Group, Mean, Median, IQR, Min, Max, N)
 
-kable(
-  simd_summary,
-  caption = "Patients Rates by SIMD Quintile"
-)
+age_stats <- calc_stats(clean_patients, "AgeGroup", "Age Group")
+sex_stats <- calc_stats(clean_patients, "Sex", "Sex")
 
+final_summary_table <- bind_rows(simd_stats, age_stats, sex_stats)
+final_df <- as.data.frame(final_summary_table)
+html_code <- '<table style="border-collapse: collapse; width: 85%; margin: auto; font-family: Arial, sans-serif; font-size: 14px;">'
+html_code <- paste0(html_code, '<thead><tr style="border: 2px solid black; background-color: #333333; color: white;">')
+for (col in names(final_df)) {
+  html_code <- paste0(html_code, '<th style="padding: 8px; border: 1px solid black; text-align: center;">', col, '</th>')
+}
+html_code <- paste0(html_code, '</tr></thead><tbody>')
+for (i in 1:nrow(final_df)) {
+
+  group_name <- final_df[i, 1]
+  if (group_name == "Age Group") {
+    bg_color <- "#E8F4F8" 
+  } else if (group_name == "Sex") {
+    bg_color <- "#E8F8E8" 
+  } else if (group_name == "SIMD (Levels 1-5)") {
+    bg_color <- "#FFF8E8" 
+  } else {
+    bg_color <- "white"
+  }
+  
+  html_code <- paste0(html_code, '<tr style="border: 1px solid black; background-color: ', bg_color, ';">')
+  
+  for (j in 1:ncol(final_df)) {
+  
+    if (j == 1 && i > 1 && final_df[i, j] == final_df[i-1, j]) {
+      cell_val <- ""
+    } else {
+      cell_val <- final_df[i, j]
+    }
+    align_style <- if(j <= 2) "text-align: left; padding-left: 10px;" else "text-align: center;"
+    html_code <- paste0(html_code, '<td style="padding: 8px; border: 1px solid black; ', align_style, '">', cell_val, '</td>')
+  }
+  html_code <- paste0(html_code, '</tr>')
+}
+html_code <- paste0(html_code, '</tbody></table>')
+browsable(HTML(html_code))
 ```
 
 
