@@ -190,7 +190,7 @@ knitr::kable(
 # Exploratory Data Analysis
 
 
-1.Visualization:
+
 
 
 ```{r,simd-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%"}
