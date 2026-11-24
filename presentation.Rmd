@@ -53,7 +53,7 @@ knitr::opts_chunk$set(
 ```{r include=FALSE}
 
 #Background image
-style_xaringan(
+xaringanthemer::style_xaringan(
   title_slide_background_image = "img/confetti.jpg"
 )
 ```
@@ -303,7 +303,7 @@ ggplot(age_plot,
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(tidyverse)
 library(knitr)
-merged_data <- read_csv("merged_mental_health.csv")
+merged_data <- read_csv("merged_data.csv")
 deprivation <- read_csv("deprivation.csv")
 age_summary <- merged_data %>%
   filter(is.finite(PatientsRates)) %>%
@@ -375,7 +375,7 @@ kable(
 
 ```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(tidyverse)
-merged_data <- read_csv("merged_mental_health.csv")
+merged_data <- read_csv("merged_data.csv")
 merged_data <- merged_data %>%
   filter(
     !is.na(AgeGroup),
