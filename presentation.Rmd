@@ -701,23 +701,24 @@ par(mfrow = c(1, 1))
 Residual Diagnostics of the Multiple Linear Regression Model
 
 Residuals vs Fitted Plot：
-Most residuals are distributed around the zero line, which suggests that the model can explain some of the variation in PatientsRates. However, the red line is not completely horizontal, and some residuals are relatively large. This suggests that the model may not fully capture the relationship between the variables.
+Most residuals are distributed around the zero line. However, the red line shows some fluctuations and is not completely horizontal. There are also some relatively large residuals. This suggests that the model may not fully capture the linear relationship between the variables.
 
 
 Normal Q-Q Plot：
-Most points follow the general pattern of the reference line. However, some points deviate from the line, especially at both ends. This suggests that the residuals may not follow a normal distribution.
+Most points follow the general pattern of the reference line. However, several points deviate from the line, especially in the upper tail. This suggests that the residuals may not fully follow a normal distribution.
+
 
 
 Scale-Location Plot：
-The red line shows a slight upward trend, and the spread of the points is not completely consistent. This suggests that the model has a heteroscedasticity problem, meaning that the error variance is not constant. HC3 robust standard errors can help improve the reliability of the statistical results.
+The red line shows a slight upward trend, especially at higher fitted values. The spread of the points is not completely consistent across the fitted values. This suggests that the model may have a heteroscedasticity problem, meaning that the error variance is not constant. HC3 robust standard errors can help improve the reliability of statistical inference.
 
 
 Residuals vs Leverage Plot：
-Most observations are clustered within a similar leverage range. However, a few points have higher leverage or larger residuals. These observations may influence the model, so they should be checked using Cook's Distance.
+Most observations are clustered within a similar leverage range. However, a few observations have relatively higher leverage or larger standardized residuals. These observations may influence the model, so they should be further examined using Cook's Distance.
 
 
 Overall Conclusion：
-Overall, the model explains some of the variation in PatientsRates. However, the diagnostic plots show problems with normality, linearity and constant error variance. HC3 robust standard errors can improve the reliability of the results. Therefore, the model is useful but could be improved further.
+Overall, the model explains some of the variation in PatientsRates. However, the diagnostic plots suggest potential problems with linearity, normality and constant error variance. The Residuals vs Fitted Plot shows some fluctuations, suggesting that the model may not fully capture the relationship between the variables. The Normal Q-Q Plot indicates that some residuals deviate from the reference line, particularly in the upper tail, suggesting that the residuals may not follow a normal distribution. The Scale-Location Plot shows a slight upward trend, indicating possible heteroscedasticity. In addition, the Residuals vs Leverage Plot identifies a few observations with relatively high leverage or large standardized residuals, which should be further examined using Cook's Distance. HC3 robust standard errors can help improve the reliability of statistical inference, particularly when heteroscedasticity is present. Therefore, the model is useful but could be improved further.
 
 ---
 
