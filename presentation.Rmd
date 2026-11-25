@@ -170,7 +170,7 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
 
 # Data Overview
 
-
+## Summary of Variables Used in the Analysis
 ```{r}
 library(knitr)
 
@@ -226,7 +226,7 @@ class: middle
   line-height: 1.15 !important;
 }
 </style>
-
+## Boxplot for the Study of Mental Health Inpatient Rates across SIMD Quintiles in Scotland
 ```{r simd-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
 age_sex <- read_csv("age.sex.csv")
@@ -288,7 +288,7 @@ class: middle
 }
 </style>
 
-
+## Boxplot for the Study of Mental Health Inpatient Rates across Sex Groups in Scotland
 ```{r sex-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
 
@@ -330,7 +330,7 @@ class: middle
   line-height: 1.15 !important;
 }
 </style>
-
+## Boxplot for the Study of Mental Health Inpatient Rates across Age Groups in Scotland
 
 ```{r age-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
@@ -392,6 +392,7 @@ class: middle
   line-height: 1.2 !important;
 }
 </style>
+## Summary Table for the Study of Mental Health Inpatient Rates across SIMD Quintiles, Age Groups, and Sex in Scotland
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(dplyr)
@@ -478,7 +479,7 @@ browsable(HTML(html_code))
 
 ---
 
-
+## Scatter Plot for the Study of the Relationship Between Mean Discharge Rates and Mental Health Inpatient Rates across Age Groups in Scotland
 
 ```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(tidyverse)
@@ -690,7 +691,7 @@ Error term (ε_t):
 Represents the residual variance at time t. It captures the unobserved factors, random shocks, or measurement errors that affect the dependent variable at that specific time period but are not included in the model.
 
 
-
+## Regression Table for the Study of Factors Associated with Mental Health Inpatient Rates in Scotland
 ```{r}
 library(dplyr)
 
@@ -785,7 +786,7 @@ The coefficient for SexMale is positive (105.4133). This indicates that, compare
 ---
 
 Model Checking：
-
+## Residual Diagnostics for the Multiple Linear Regression Model
 ```{r}
 model_merged <- lm(
   PatientsRates ~ AgeGroup + Sex +
