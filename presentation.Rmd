@@ -842,7 +842,180 @@ The regression model demonstrates an excellent overall fit, with an Adjusted R-s
 However, the diagnostic plots indicate some deviations from standard assumptions. The Residuals vs Fitted plot shows a slight non-linear pattern (a curved red line) rather than random scatter, and the Q-Q plot shows slight deviations in the tails. This suggests that while the model's predictive power is very strong, there might be complex non-linear relationships or outliers within the data that could be further explored.
 
 ---
-Reduced Model:
+Sensitivity Analysis for Linear Regression
+```{r}
+
+library(readr)
+
+deprivation <- read_csv("deprivation.csv", show_col_types = FALSE)
+
+deprivation <- subset(deprivation, HBR == "S92000003" & Dataset == "SMR04")
+
+deprivation <- deprivation[complete.cases(deprivation[, c("FinancialYear", "SIMD", "PatientsRates")]), ]
+
+deprivation$SIMD_group <- factor(deprivation$SIMD)
+
+cat("Number of observations:", nrow(deprivation), "\n")
+
+model_original <- lm(PatientsRates ~ SIMD, data = deprivation)
+
+model_year_adjusted <- lm(PatientsRates ~ SIMD + factor(FinancialYear), data = deprivation)
+
+model_factor <- lm(PatientsRates ~ SIMD_group + factor(FinancialYear), data = deprivation)
+
+deprivation_no_covid <- subset(
+  deprivation,
+  !FinancialYear %in% c("2019/20", "2020/21", "2021/22")
+)
+
+model_no_covid <- lm(
+  PatientsRates ~ SIMD + factor(FinancialYear),
+  data = deprivation_no_covid
+)
+
+get_results <- function(model, model_name, term) {
+  p <- drop1(model, test = "F")[term, "Pr(>F)"]
+
+  data.frame(
+    Model = model_name,
+    N = nobs(model),
+    R_squared = summary(model)$r.squared,
+    Adjusted_R_squared = summary(model)$adj.r.squared,
+    SIMD_p_value = p
+  )
+}
+
+sensitivity_results <- rbind(
+  get_results(model_original, "Original Model", "SIMD"),
+  get_results(model_year_adjusted, "Year Adjusted Model", "SIMD"),
+  get_results(model_factor, "Categorical SIMD Model", "SIMD_group"),
+  get_results(model_no_covid, "Excluding COVID Years", "SIMD")
+)
+
+print(sensitivity_results, row.names = FALSE)
+
+anova(model_year_adjusted, model_factor)
+
+
+library(ggplot2)
+
+model_data <- model.frame(model_merged)
+
+cook_distance <- cooks.distance(model_merged)
+
+cutoff <- 4 / nrow(model_data)
+
+keep_obs <- cook_distance <= cutoff
+
+model_sensitivity <- lm(
+  formula(model_merged),
+  data = model_data[keep_obs, , drop = FALSE]
+)
+
+
+get_result <- function(fit, model_name) {
+
+  coef_table <- summary(fit)$coefficients
+  ci <- confint(fit, "DR_SIMD_1")
+
+  data.frame(
+    Model = model_name,
+    Coefficient = coef_table["DR_SIMD_1", "Estimate"],
+    P_value = coef_table["DR_SIMD_1", "Pr(>|t|)"],
+    CI_lower = ci[1, 1],
+    CI_upper = ci[1, 2]
+  )
+}
+
+
+sensitivity_results <- rbind(
+  get_result(model_merged, "Original Model"),
+  get_result(model_sensitivity, "Sensitivity Model")
+)
+
+print(sensitivity_results, row.names = FALSE)
+
+sensitivity_results$Model <- factor(
+  sensitivity_results$Model,
+  levels = c("Original Model", "Sensitivity Model")
+)
+
+ggplot(
+  sensitivity_results,
+  aes(x = Coefficient, y = Model, color = Model)
+) +
+
+  geom_vline(
+    xintercept = 0,
+    linetype = "dashed",
+    color = "grey60",
+    linewidth = 0.7
+  ) +
+
+  geom_segment(
+    aes(
+      x = CI_lower,
+      xend = CI_upper,
+      y = Model,
+      yend = Model
+    ),
+    linewidth = 1.5,
+    lineend = "round"
+  ) +
+
+  geom_point(size = 4.5) +
+
+  geom_text(
+    aes(label = sprintf("%.3f", Coefficient)),
+    nudge_y = 0.2,
+    size = 4,
+    color = "#263238",
+    show.legend = FALSE
+  ) +
+
+  scale_color_manual(
+    values = c(
+      "Original Model" = "#2F6690",
+      "Sensitivity Model" = "#D97745"
+    )
+  ) +
+
+  labs(
+    title = "Sensitivity Analysis of the Regression Coefficient",
+    subtitle = "Original Model vs. Sensitivity Model",
+    x = "Deprivation Gap Regression Coefficient (95% CI)",
+    y = NULL,
+    caption = "Error bars represent 95% confidence intervals."
+  ) +
+
+  theme_minimal(base_size = 14) +
+
+  theme(
+    legend.position = "none",
+    plot.title = element_text(
+      face = "bold",
+      size = 17
+    ),
+    plot.subtitle = element_text(
+      size = 11,
+      color = "grey40"
+    ),
+    axis.text.y = element_text(
+      face = "bold",
+      color = "#333333"
+    ),
+    axis.title.x = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(
+      size = 9,
+      color = "grey45"
+    )
+  )
+
+
+
+```
+
 
 *Correlation表格+error term+p-value+model checking
 
