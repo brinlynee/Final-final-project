@@ -170,7 +170,6 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
 
 # Data Overview
 
-## Summary of Variables Used in the Analysis
 ```{r}
 library(knitr)
 
@@ -226,7 +225,7 @@ class: middle
   line-height: 1.15 !important;
 }
 </style>
-## Boxplot for the Study of Mental Health Inpatient Rates across SIMD Quintiles in Scotland
+## Boxplot for the Study of Mental Health Inpatient Rates across SIMD Quantiles in Scotland
 ```{r simd-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
 age_sex <- read_csv("age.sex.csv")
@@ -905,7 +904,7 @@ cook_distance <- cooks.distance(model_merged)
 
 cutoff <- 4 / nrow(model_data)
 
-keep_obs <- cook_distance <= cutoff
+keep_obs <- !is.na(cook_distance) & (cook_distance <= cutoff)
 
 model_sensitivity <- lm(
   formula(model_merged),
@@ -914,20 +913,21 @@ model_sensitivity <- lm(
 
 
 get_result <- function(fit, model_name) {
-
   coef_table <- summary(fit)$coefficients
-  ci <- confint(fit, "DR_SIMD_1")
-
+  all_terms <- rownames(coef_table)
+  target_term <- all_terms[grepl("gap|dr_simd", all_terms, ignore.case = TRUE)][1]
+  if (is.na(target_term)) {
+    stop
+  }
+  ci <- confint(fit, target_term)
   data.frame(
     Model = model_name,
-    Coefficient = coef_table["DR_SIMD_1", "Estimate"],
-    P_value = coef_table["DR_SIMD_1", "Pr(>|t|)"],
+    Coefficient = coef_table[target_term, "Estimate"],
+    P_value = coef_table[target_term, "Pr(>|t|)"],
     CI_lower = ci[1, 1],
     CI_upper = ci[1, 2]
   )
 }
-
-
 sensitivity_results <- rbind(
   get_result(model_merged, "Original Model"),
   get_result(model_sensitivity, "Sensitivity Model")
@@ -1017,12 +1017,12 @@ ggplot(
 ```
 
 
-*Correlation表格+error term+p-value+model checking
 
+Analysis：
 
 
 ---
-#Conclusion：
+#Conclusion
 Factors Associated with Patient Rates (PR) and Their Relationships:
 The regression results indicate that all independent variables are statistically significant in relation to mental health inpatient patient rates. Specifically:
 
