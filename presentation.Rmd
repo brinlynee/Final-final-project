@@ -91,7 +91,7 @@ deprivation_year <- deprivation %>%
     MeanDischargeRates = rowMeans(
       across(starts_with("DR_SIMD_"))
     ),
-    DR_SIMD_1 = DR_SIMD_1 - DR_SIMD_5
+    deprivation_gap = DR_SIMD_1 - DR_SIMD_5
   )
 
 merged_data <- age_sex %>%
@@ -118,7 +118,7 @@ print(merged_data)
 
 model_combined <- lm(
   PatientsRates ~ AgeGroup + Sex +
-    MeanDischargeRates + DR_SIMD_1,
+    MeanDischargeRates + deprivation_gap,
   data = merged_data
 )
 
@@ -663,20 +663,27 @@ gt_table
 
 Regression Model:
 
-$$
-\text{patientrates}_t=\alpha+\beta_1 \cdot \text{SIMD}_t+\beta_2\cdot\text{dischargerates}_t+\beta_3\cdot\text{age}_t+\beta_4\cdot\text{sex}_t
-$$
+$$\begin{aligned} \text{PatientsRates}_{t} &= \alpha + \beta_1 \cdot \text{DeprivationGap}_{t} \\ &\quad + \beta_2 \cdot \text{DischargeRates}_{t} \\ &\quad + \beta_3 \cdot \text{AgeGroup}_{t} + \beta_4 \cdot \text{Sex}_{t} \end{aligned}$$
+
+
 
 ```{r}
+
+merged_data <- read.csv("merged_mental_health.csv")
+
 merged_data <- merged_data %>%
   rename(
     PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")),
     DischargeRates = any_of(c("DischargeRates.x", "DischargeRates"))
   )
 
-model <- lm(PatientsRates ~ DR_SIMD_1 + MeanDischargeRates + AgeGroup + Sex, 
-            data = merged_data, 
-            na.action = na.omit)
+model <- lm(
+  PatientsRates ~ deprivation_gap + MeanDischargeRates +
+    AgeGroup + Sex,
+  data = merged_data,
+  na.action = na.omit
+)
+
 ```
 
 
@@ -707,13 +714,12 @@ clean_data <- merged_data %>%
   rename(
     PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")),
     DischargeRates = any_of("MeanDischargeRates"),
-    SIMD = any_of("DR_SIMD_1")
   ) %>%
-  select(HBR, FinancialYear, AgeGroup, Sex,
-         PatientsRates, DischargeRates, SIMD)
+ select(HBR, FinancialYear, AgeGroup, Sex,
+       PatientsRates, DischargeRates, deprivation_gap)
 
 model_full <- lm(
-  PatientsRates ~ SIMD + DischargeRates + AgeGroup + Sex,
+  PatientsRates ~ deprivation_gap + DischargeRates + AgeGroup + Sex,
   data = clean_data,
   na.action = na.omit
 )
@@ -781,7 +787,7 @@ Results：
 
 The Intercept (Alpha) is positive (113.8687). This represents the baseline patient rate when all independent variables are at their reference levels or zero. The p-value of 0.01973 is less than 0.05, indicating that this baseline value is statistically significant at the 5% level.
 
-The SIMD coefficient is negative (-0.3681), meaning that for every one-unit increase in SIMD, the patient rate decreases by 0.3681. The p-value of 7.59e-05 indicates that this result is statistically significant at the 0.1% level (p < 0.001).
+The deprivation gap coefficient is negative (-0.3681), meaning that for every one-unit increase in the discharge-rate gap between SIMD 1 and SIMD 5, the patient rate decreases by approximately 0.3681, holding other variables constant. The p-value of 7.59e-05 indicates that this result is statistically significant at the 0.1% level (p < 0.001).
 
 The coefficient for DischargeRates is positive (0.3218). This indicates a positive relationship: for every one-unit increase in discharge rates, the patient rate increases by approximately 0.3218. The p-value of 0.00392 is less than 0.01, demonstrating statistical significance at the 1% level.
 
@@ -791,12 +797,11 @@ The coefficient for SexMale is positive (105.4133). This indicates that, compare
 
 ---
 
-Model Checking：
 ## Residual Diagnostics for the Multiple Linear Regression Model
 ```{r}
 model_merged <- lm(
   PatientsRates ~ AgeGroup + Sex +
-    MeanDischargeRates + DR_SIMD_1,
+    MeanDischargeRates + deprivation_gap,
   data = merged_data
 )
 
@@ -809,6 +814,9 @@ par(mfrow = c(1, 1))
 
 ---
 Residual Diagnostics of the Multiple Linear Regression Model
+
+The diagnostic plots assess the multiple linear regression model using deprivation gap, mean discharge rates, age group, and sex as explanatory 
+variables.
 
 Residuals vs Fitted Plot：
 Most residuals are distributed around the zero line. However, the red line shows some fluctuations and is not completely horizontal. There are also some relatively large residuals. This suggests that the model may not fully capture the linear relationship between the variables.
@@ -823,7 +831,7 @@ Residuals vs Leverage Plot：
 Most observations are clustered within a similar leverage range. However, a few observations have relatively higher leverage or larger standardized residuals. These observations may influence the model, so they should be further examined using Cook's Distance.
 
 Overall Conclusion：
-Overall, the model explains some of the variation in PatientsRates. However, the diagnostic plots suggest potential problems with linearity, normality and constant error variance. The Residuals vs Fitted Plot shows some fluctuations, suggesting that the model may not fully capture the relationship between the variables. The Normal Q-Q Plot indicates that some residuals deviate from the reference line, particularly in the upper tail, suggesting that the residuals may not follow a normal distribution. The Scale-Location Plot shows a slight upward trend, indicating possible heteroscedasticity. In addition, the Residuals vs Leverage Plot identifies a few observations with relatively high leverage or large standardized residuals, which should be further examined using Cook's Distance. HC3 robust standard errors can help improve the reliability of statistical inference, particularly when heteroscedasticity is present. Therefore, the model is useful but could be improved further.
+Overall, the multiple linear regression model examines the associations between PatientsRates and deprivation gap, mean discharge rates, age group, and sex. The Residuals vs Fitted Plot shows some fluctuations, suggesting that the model may not fully capture the relationship between the variables. The Normal Q-Q Plot indicates that some residuals deviate from the reference line, particularly in the upper tail, suggesting that the residuals may not follow a normal distribution. The Scale-Location Plot shows a slight upward trend, indicating possible heteroscedasticity. In addition, the Residuals vs Leverage Plot identifies a few observations with relatively high leverage or large standardized residuals, which should be further examined using Cook's Distance. HC3 robust standard errors can help improve the reliability of statistical inference, particularly when heteroscedasticity is present. Therefore, the model is useful but could be improved further.
 
 ---
 
@@ -859,4 +867,6 @@ Limitations
 Despite the strong predictive power of the model (R square=0.9073), this study has several limitations:
 
 Limited Temporal Data: The dataset covers a relatively short time frame (limited number of years). This restricts the model's ability to capture long-term trends, structural breaks, or delayed effects of socioeconomic changes on mental health patient rates over time.
-Omission of Other Influencing Factors: The current model only accounts for SIMD, discharge rates, age, and sex. Other crucial factors—such as underlying physical health conditions, regional healthcare resource availability, lifestyle behaviors, or broader macroeconomic conditions—were not included, which may lead to omitted variable bias.
+
+Omission of Other Influencing Factors: The model includes the discharge-rate gap between SIMD 1 and SIMD 5, mean discharge rates, age group, and sex. Other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included.
+
