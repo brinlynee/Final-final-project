@@ -415,18 +415,24 @@ calc_stats <- function(data, group_var, var_name) {
 
 clean_patients <- merged_data %>% rename(PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")))
 
-simd_stats <- clean_patients %>%
-  select(PatientsRates, starts_with("DR_SIMD")) %>%
-  pivot_longer(cols = starts_with("DR_SIMD"), names_to = "SIMD_Level", values_to = "SIMD_Value") %>%
-  mutate(SIMD_Level = gsub("DR_SIMD_", "", SIMD_Level)) %>%
-  group_by(Group = SIMD_Level) %>%
+deprivation <- readr::read_csv("deprivation.csv", show_col_types = FALSE)
+
+simd_stats <- deprivation %>%
+  filter(
+    Dataset == "SMR04",
+    HBR == "S92000003",
+    as.character(SIMD) %in% as.character(1:5),
+    is.finite(PatientsRates)
+  ) %>%
+  group_by(Group = as.character(SIMD)) %>%
   summarise(
     Mean = round(mean(PatientsRates, na.rm = TRUE), 2),
     Median = round(median(PatientsRates, na.rm = TRUE), 2),
     IQR = round(IQR(PatientsRates, na.rm = TRUE), 2),
     Min = round(min(PatientsRates, na.rm = TRUE), 2),
     Max = round(max(PatientsRates, na.rm = TRUE), 2),
-    N = n(), .groups = 'drop'
+    N = n(),
+    .groups = "drop"
   ) %>%
   mutate(`Grouping Variable` = "SIMD (Levels 1-5)") %>%
   select(`Grouping Variable`, Group, Mean, Median, IQR, Min, Max, N)
