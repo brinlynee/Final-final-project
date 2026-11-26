@@ -171,97 +171,59 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
 # Data Overview
 
 ```{r}
-library(knitr)
-
-variable_table <- data.frame(
-  Variable = c(
-    "Sex",
-    "AgeGroup",
-    "DischargeRates",
-    "PatientsRates",
-    "DeprivationGap"
-  ),
-  Type = c(
-    "Categorical",
-    "Categorical",
-    "Numeric",
-    "Numeric",
-    "Numeric"
-  ),
-  Description = c(
-    "The patient's sex, as recorded on admission.",
-    "Refers to the patient's age on admission. Ages have been arranged in five different groups.",
-    "The annual number of discharges relative to the size of the population, expressed per 100,000 population.",
-    "The annual number of patients relative to the size of the population, expressed per 100,000 population.",
-    "The deprivation gap is calculated as DR_SIMD_1 minus DR_SIMD_5 (SIMD1 - SIMD5).The Scottish Index of Multiple Deprivation (SIMD) identifies concentrations of multiple deprivation across Scotland. Data zones are arranged into five groups, from the most deprived (1) to the least deprived (5).DR_SIMD_1 means the deprivtaion which in the area with SIMD 1,DR_SIMD_5 means the deprivtaion which in the area with SIMD 5 "
-  )
-)
-
-knitr::kable(
-  variable_table,
-  format = "html",
-  col.names = c("Variable", "Type", "Description"),
-  align = "lll"
-)
-```
-
----
-
-class: middle
-
-# Exploratory Data Analysis
-
-<style>
-.remark-slide-content table {
-  width: 90% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-.remark-slide-content table th,
-.remark-slide-content table td {
-  font-size: 18px !important;
-  padding: 5px 7px !important;
-  line-height: 1.15 !important;
-}
-</style>
-## Boxplot for the Study of Mental Health Inpatient Rates across SIMD Quantiles in Scotland
-```{r simd-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
-age_sex <- read_csv("age.sex.csv")
+
 deprivation <- read_csv("deprivation.csv")
+
 plot_deprivation <- deprivation %>%
+  mutate(
+    HBR = tolower(trimws(HBR)),
+    Dataset = trimws(Dataset),
+    SIMD = as.numeric(as.character(SIMD))
+  ) %>%
   filter(
     Dataset == "SMR04",
-    HBR == "S92000003",
-    SIMD %in% 1:5,
+    HBR == "s92000003",
+    SIMD %in% c(1, 5),
     is.finite(PatientsRates)
   ) %>%
+  group_by(FinancialYear, SIMD) %>%
+  summarise(
+    PatientsRates = mean(PatientsRates),
+    .groups = "drop"
+  ) %>%
+  pivot_wider(
+    names_from = SIMD,
+    values_from = PatientsRates,
+    names_prefix = "SIMD"
+  ) %>%
+  filter(
+    !is.na(SIMD1),
+    !is.na(SIMD5)
+  ) %>%
   mutate(
-    SIMD = factor(SIMD, levels = 1:5)
+    deprivationgap = SIMD1 - SIMD5
   )
-ggplot(plot_deprivation,
-                 aes(x = SIMD,
-                     y = PatientsRates,
-                     fill = SIMD)) +
-  geom_boxplot(alpha = 0.7) +
-  scale_fill_manual(
-    values = c(
-      "1" = "#E63946",
-      "2" = "#457B9D",
-      "3" = "#2A9D8F",
-      "4" = "#9B59B6",
-      "5" = "#F4A261"
-    )
+
+ggplot(plot_deprivation, aes(x = FinancialYear, y = deprivationgap)) +
+  geom_point(
+    color = "#E63946",
+    size = 3,
+    alpha = 0.8
   ) +
   labs(
-    title = "Mental Health Inpatient Rates by SIMD",
+    title = "Mental Health Inpatient Rate Gap",
     subtitle = "Scotland",
-    x = "SIMD Quintile",
-    y = "Patients per 100,000 Population"
+    x = "Financial Year",
+    y = "Deprivation Gap (SIMD 1 - SIMD 5)\nPatients per 100,000 Population"
   ) +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 ```
 
 
@@ -833,7 +795,7 @@ Overall, the multiple linear regression model examines the associations between 
 
 
 Overall Model Performance:
-The regression model demonstrates an excellent overall fit, with an Adjusted R-squared of 0.9188, meaning the predictors explain approximately 91.88% of the variance in patient rates. The overall model is highly significant (F-test p-value < 2.2e-16), and almost all individual predictors (SIMD, DischargeRates, AgeGroup, and Sex) are significant at the 0.1% level. The residual standard error is 79.34.
+The regression model demonstrates an excellent overall fit, with an Adjusted R-squared of 0.9188, meaning the predictors explain approximately 91.88% of the variance in patient rates. The overall model is highly significant (F-test p-value < 2.2e-16), and almost all individual predictors (DeprivationGap, DischargeRates, AgeGroup, and Sex) are significant at the 0.1% level. The residual standard error is 79.34.
 
 However, the diagnostic plots indicate some deviations from standard assumptions. The Residuals vs Fitted plot shows a slight non-linear pattern (a curved red line) rather than random scatter, and the Q-Q plot shows slight deviations in the tails. This suggests that while the model's predictive power is very strong, there might be complex non-linear relationships or outliers within the data that could be further explored.
 
