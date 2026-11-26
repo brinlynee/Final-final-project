@@ -109,9 +109,9 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
    &lt;td style="text-align:left;"&gt; The annual number of patients relative to the size of the population, expressed per 100,000 population. &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; SIMD &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; DeprivationGap &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Numeric &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; The Scottish Index of Multiple Deprivation (SIMD) identifies concentrations of multiple deprivation across Scotland. Data zones are arranged into five groups, from the most deprived (1) to the least deprived (5). &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The deprivation gap is calculated as DR_SIMD_1 minus DR_SIMD_5 (SIMD1 - SIMD5).The Scottish Index of Multiple Deprivation (SIMD) identifies concentrations of multiple deprivation across Scotland. Data zones are arranged into five groups, from the most deprived (1) to the least deprived (5).DR_SIMD_1 means the deprivtaion which in the area with SIMD 1,DR_SIMD_5 means the deprivtaion which in the area with SIMD 5 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -270,23 +270,23 @@ class: middle
 
 Correlation Matrix between Variables：
 
-<div id="bmpaattvrg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bmpaattvrg table {
+<div id="eeqtbpajfb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eeqtbpajfb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bmpaattvrg thead, #bmpaattvrg tbody, #bmpaattvrg tfoot, #bmpaattvrg tr, #bmpaattvrg td, #bmpaattvrg th {
+#eeqtbpajfb thead, #eeqtbpajfb tbody, #eeqtbpajfb tfoot, #eeqtbpajfb tr, #eeqtbpajfb td, #eeqtbpajfb th {
   border-style: none;
 }
 
-#bmpaattvrg p {
+#eeqtbpajfb p {
   margin: 0;
   padding: 0;
 }
 
-#bmpaattvrg .gt_table {
+#eeqtbpajfb .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -312,12 +312,12 @@ Correlation Matrix between Variables：
   border-left-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_caption {
+#eeqtbpajfb .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bmpaattvrg .gt_title {
+#eeqtbpajfb .gt_title {
   color: #333333;
   font-size: 32px;
   font-weight: initial;
@@ -329,7 +329,7 @@ Correlation Matrix between Variables：
   border-bottom-width: 0;
 }
 
-#bmpaattvrg .gt_subtitle {
+#eeqtbpajfb .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -341,7 +341,7 @@ Correlation Matrix between Variables：
   border-top-width: 0;
 }
 
-#bmpaattvrg .gt_heading {
+#eeqtbpajfb .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -353,13 +353,13 @@ Correlation Matrix between Variables：
   border-right-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_bottom_border {
+#eeqtbpajfb .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_col_headings {
+#eeqtbpajfb .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -374,7 +374,7 @@ Correlation Matrix between Variables：
   border-right-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_col_heading {
+#eeqtbpajfb .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 24px;
@@ -394,7 +394,7 @@ Correlation Matrix between Variables：
   overflow-x: hidden;
 }
 
-#bmpaattvrg .gt_column_spanner_outer {
+#eeqtbpajfb .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 24px;
@@ -406,15 +406,15 @@ Correlation Matrix between Variables：
   padding-right: 4px;
 }
 
-#bmpaattvrg .gt_column_spanner_outer:first-child {
+#eeqtbpajfb .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bmpaattvrg .gt_column_spanner_outer:last-child {
+#eeqtbpajfb .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bmpaattvrg .gt_column_spanner {
+#eeqtbpajfb .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -426,11 +426,11 @@ Correlation Matrix between Variables：
   width: 100%;
 }
 
-#bmpaattvrg .gt_spanner_row {
+#eeqtbpajfb .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bmpaattvrg .gt_group_heading {
+#eeqtbpajfb .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -456,7 +456,7 @@ Correlation Matrix between Variables：
   text-align: left;
 }
 
-#bmpaattvrg .gt_empty_group_heading {
+#eeqtbpajfb .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -471,15 +471,15 @@ Correlation Matrix between Variables：
   vertical-align: middle;
 }
 
-#bmpaattvrg .gt_from_md > :first-child {
+#eeqtbpajfb .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bmpaattvrg .gt_from_md > :last-child {
+#eeqtbpajfb .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bmpaattvrg .gt_row {
+#eeqtbpajfb .gt_row {
   padding-top: 15px;
   padding-bottom: 15px;
   padding-left: 5px;
@@ -498,7 +498,7 @@ Correlation Matrix between Variables：
   overflow-x: hidden;
 }
 
-#bmpaattvrg .gt_stub {
+#eeqtbpajfb .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -511,7 +511,7 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#bmpaattvrg .gt_stub_row_group {
+#eeqtbpajfb .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -525,15 +525,15 @@ Correlation Matrix between Variables：
   vertical-align: top;
 }
 
-#bmpaattvrg .gt_row_group_first td {
+#eeqtbpajfb .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bmpaattvrg .gt_row_group_first th {
+#eeqtbpajfb .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bmpaattvrg .gt_summary_row {
+#eeqtbpajfb .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -543,16 +543,16 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#bmpaattvrg .gt_first_summary_row {
+#eeqtbpajfb .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_first_summary_row.thick {
+#eeqtbpajfb .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bmpaattvrg .gt_last_summary_row {
+#eeqtbpajfb .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -562,7 +562,7 @@ Correlation Matrix between Variables：
   border-bottom-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_grand_summary_row {
+#eeqtbpajfb .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -572,7 +572,7 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#bmpaattvrg .gt_first_grand_summary_row {
+#eeqtbpajfb .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -582,7 +582,7 @@ Correlation Matrix between Variables：
   border-top-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_last_grand_summary_row_top {
+#eeqtbpajfb .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -592,11 +592,11 @@ Correlation Matrix between Variables：
   border-bottom-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_striped {
+#eeqtbpajfb .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bmpaattvrg .gt_table_body {
+#eeqtbpajfb .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -605,7 +605,7 @@ Correlation Matrix between Variables：
   border-bottom-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_footnotes {
+#eeqtbpajfb .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -619,7 +619,7 @@ Correlation Matrix between Variables：
   border-right-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_footnote {
+#eeqtbpajfb .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -628,7 +628,7 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#bmpaattvrg .gt_sourcenotes {
+#eeqtbpajfb .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -642,7 +642,7 @@ Correlation Matrix between Variables：
   border-right-color: #D3D3D3;
 }
 
-#bmpaattvrg .gt_sourcenote {
+#eeqtbpajfb .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -650,72 +650,72 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#bmpaattvrg .gt_left {
+#eeqtbpajfb .gt_left {
   text-align: left;
 }
 
-#bmpaattvrg .gt_center {
+#eeqtbpajfb .gt_center {
   text-align: center;
 }
 
-#bmpaattvrg .gt_right {
+#eeqtbpajfb .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bmpaattvrg .gt_font_normal {
+#eeqtbpajfb .gt_font_normal {
   font-weight: normal;
 }
 
-#bmpaattvrg .gt_font_bold {
+#eeqtbpajfb .gt_font_bold {
   font-weight: bold;
 }
 
-#bmpaattvrg .gt_font_italic {
+#eeqtbpajfb .gt_font_italic {
   font-style: italic;
 }
 
-#bmpaattvrg .gt_super {
+#eeqtbpajfb .gt_super {
   font-size: 65%;
 }
 
-#bmpaattvrg .gt_footnote_marks {
+#eeqtbpajfb .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bmpaattvrg .gt_asterisk {
+#eeqtbpajfb .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bmpaattvrg .gt_indent_1 {
+#eeqtbpajfb .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bmpaattvrg .gt_indent_2 {
+#eeqtbpajfb .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bmpaattvrg .gt_indent_3 {
+#eeqtbpajfb .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bmpaattvrg .gt_indent_4 {
+#eeqtbpajfb .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bmpaattvrg .gt_indent_5 {
+#eeqtbpajfb .gt_indent_5 {
   text-indent: 25px;
 }
 
-#bmpaattvrg .katex-display {
+#eeqtbpajfb .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#bmpaattvrg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#eeqtbpajfb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -895,37 +895,6 @@ However, the diagnostic plots indicate some deviations from standard assumptions
 ---
 Sensitivity Analysis for Linear Regression
 
-```
-## Number of observations: 135
-```
-
-```
-##                   Model   N R_squared Adjusted_R_squared SIMD_p_value
-##          Original Model 135 0.7353915          0.7334020 3.220616e-40
-##     Year Adjusted Model 135 0.9500637          0.9374629 7.590941e-66
-##  Categorical SIMD Model 135 0.9740474          0.9665611 5.066391e-76
-##   Excluding COVID Years 120 0.9532294          0.9414137 1.478719e-60
-```
-
-```
-## Analysis of Variance Table
-## 
-## Model 1: PatientsRates ~ SIMD + factor(FinancialYear)
-## Model 2: PatientsRates ~ SIMD_group + factor(FinancialYear)
-##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
-## 1    107 137728                                  
-## 2    104  71579  3     66149 32.037 9.515e-15 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-```
-
-```
-##              Model Coefficient      P_value   CI_lower   CI_upper
-##     Original Model  -0.3681255 7.585256e-05 -0.5483971 -0.1878540
-##  Sensitivity Model  -0.3025794 2.350061e-04 -0.4622452 -0.1429135
-```
-
-&lt;img src="presentation_files/figure-html/unnamed-chunk-10-1.png" alt="" width="85%" /&gt;
 
 
 
