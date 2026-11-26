@@ -79,65 +79,7 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
 
 # Data Overview
 
-&lt;table&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt; Variable &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; Type &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; Description &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Sex &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Categorical &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; The patient's sex, as recorded on admission. &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; AgeGroup &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Categorical &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Refers to the patient's age on admission. Ages have been arranged in five different groups. &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; DischargeRates &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Numeric &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; The annual number of discharges relative to the size of the population, expressed per 100,000 population. &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; PatientsRates &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Numeric &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; The annual number of patients relative to the size of the population, expressed per 100,000 population. &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; DeprivationGap &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Numeric &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; The deprivation gap is calculated as DR_SIMD_1 minus DR_SIMD_5 (SIMD1 - SIMD5).The Scottish Index of Multiple Deprivation (SIMD) identifies concentrations of multiple deprivation across Scotland. Data zones are arranged into five groups, from the most deprived (1) to the least deprived (5).DR_SIMD_1 means the deprivtaion which in the area with SIMD 1,DR_SIMD_5 means the deprivtaion which in the area with SIMD 5 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
----
-
-class: middle
-
-# Exploratory Data Analysis
-
-&lt;style&gt;
-.remark-slide-content table {
-  width: 90% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-.remark-slide-content table th,
-.remark-slide-content table td {
-  font-size: 18px !important;
-  padding: 5px 7px !important;
-  line-height: 1.15 !important;
-}
-&lt;/style&gt;
-## Boxplot for the Study of Mental Health Inpatient Rates across SIMD Quantiles in Scotland
-&lt;img src="presentation_files/figure-html/simd-boxplot-1.png" alt="" width="75%" style="display: block; margin: auto;" /&gt;
+&lt;img src="presentation_files/figure-html/unnamed-chunk-2-1.png" alt="" width="85%" /&gt;
 
 
 ---
@@ -270,23 +212,23 @@ class: middle
 
 Correlation Matrix between Variables：
 
-<div id="krxryxcqil" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#krxryxcqil table {
+<div id="zhrafnudhz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zhrafnudhz table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#krxryxcqil thead, #krxryxcqil tbody, #krxryxcqil tfoot, #krxryxcqil tr, #krxryxcqil td, #krxryxcqil th {
+#zhrafnudhz thead, #zhrafnudhz tbody, #zhrafnudhz tfoot, #zhrafnudhz tr, #zhrafnudhz td, #zhrafnudhz th {
   border-style: none;
 }
 
-#krxryxcqil p {
+#zhrafnudhz p {
   margin: 0;
   padding: 0;
 }
 
-#krxryxcqil .gt_table {
+#zhrafnudhz .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -312,12 +254,12 @@ Correlation Matrix between Variables：
   border-left-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_caption {
+#zhrafnudhz .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#krxryxcqil .gt_title {
+#zhrafnudhz .gt_title {
   color: #333333;
   font-size: 32px;
   font-weight: initial;
@@ -329,7 +271,7 @@ Correlation Matrix between Variables：
   border-bottom-width: 0;
 }
 
-#krxryxcqil .gt_subtitle {
+#zhrafnudhz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -341,7 +283,7 @@ Correlation Matrix between Variables：
   border-top-width: 0;
 }
 
-#krxryxcqil .gt_heading {
+#zhrafnudhz .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -353,13 +295,13 @@ Correlation Matrix between Variables：
   border-right-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_bottom_border {
+#zhrafnudhz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_col_headings {
+#zhrafnudhz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -374,7 +316,7 @@ Correlation Matrix between Variables：
   border-right-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_col_heading {
+#zhrafnudhz .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 24px;
@@ -394,7 +336,7 @@ Correlation Matrix between Variables：
   overflow-x: hidden;
 }
 
-#krxryxcqil .gt_column_spanner_outer {
+#zhrafnudhz .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 24px;
@@ -406,15 +348,15 @@ Correlation Matrix between Variables：
   padding-right: 4px;
 }
 
-#krxryxcqil .gt_column_spanner_outer:first-child {
+#zhrafnudhz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#krxryxcqil .gt_column_spanner_outer:last-child {
+#zhrafnudhz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#krxryxcqil .gt_column_spanner {
+#zhrafnudhz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -426,11 +368,11 @@ Correlation Matrix between Variables：
   width: 100%;
 }
 
-#krxryxcqil .gt_spanner_row {
+#zhrafnudhz .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#krxryxcqil .gt_group_heading {
+#zhrafnudhz .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -456,7 +398,7 @@ Correlation Matrix between Variables：
   text-align: left;
 }
 
-#krxryxcqil .gt_empty_group_heading {
+#zhrafnudhz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -471,15 +413,15 @@ Correlation Matrix between Variables：
   vertical-align: middle;
 }
 
-#krxryxcqil .gt_from_md > :first-child {
+#zhrafnudhz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#krxryxcqil .gt_from_md > :last-child {
+#zhrafnudhz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#krxryxcqil .gt_row {
+#zhrafnudhz .gt_row {
   padding-top: 15px;
   padding-bottom: 15px;
   padding-left: 5px;
@@ -498,7 +440,7 @@ Correlation Matrix between Variables：
   overflow-x: hidden;
 }
 
-#krxryxcqil .gt_stub {
+#zhrafnudhz .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -511,7 +453,7 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#krxryxcqil .gt_stub_row_group {
+#zhrafnudhz .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -525,15 +467,15 @@ Correlation Matrix between Variables：
   vertical-align: top;
 }
 
-#krxryxcqil .gt_row_group_first td {
+#zhrafnudhz .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#krxryxcqil .gt_row_group_first th {
+#zhrafnudhz .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#krxryxcqil .gt_summary_row {
+#zhrafnudhz .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -543,16 +485,16 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#krxryxcqil .gt_first_summary_row {
+#zhrafnudhz .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_first_summary_row.thick {
+#zhrafnudhz .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#krxryxcqil .gt_last_summary_row {
+#zhrafnudhz .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -562,7 +504,7 @@ Correlation Matrix between Variables：
   border-bottom-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_grand_summary_row {
+#zhrafnudhz .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -572,7 +514,7 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#krxryxcqil .gt_first_grand_summary_row {
+#zhrafnudhz .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -582,7 +524,7 @@ Correlation Matrix between Variables：
   border-top-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_last_grand_summary_row_top {
+#zhrafnudhz .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -592,11 +534,11 @@ Correlation Matrix between Variables：
   border-bottom-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_striped {
+#zhrafnudhz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#krxryxcqil .gt_table_body {
+#zhrafnudhz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -605,7 +547,7 @@ Correlation Matrix between Variables：
   border-bottom-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_footnotes {
+#zhrafnudhz .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -619,7 +561,7 @@ Correlation Matrix between Variables：
   border-right-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_footnote {
+#zhrafnudhz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -628,7 +570,7 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#krxryxcqil .gt_sourcenotes {
+#zhrafnudhz .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -642,7 +584,7 @@ Correlation Matrix between Variables：
   border-right-color: #D3D3D3;
 }
 
-#krxryxcqil .gt_sourcenote {
+#zhrafnudhz .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -650,72 +592,72 @@ Correlation Matrix between Variables：
   padding-right: 5px;
 }
 
-#krxryxcqil .gt_left {
+#zhrafnudhz .gt_left {
   text-align: left;
 }
 
-#krxryxcqil .gt_center {
+#zhrafnudhz .gt_center {
   text-align: center;
 }
 
-#krxryxcqil .gt_right {
+#zhrafnudhz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#krxryxcqil .gt_font_normal {
+#zhrafnudhz .gt_font_normal {
   font-weight: normal;
 }
 
-#krxryxcqil .gt_font_bold {
+#zhrafnudhz .gt_font_bold {
   font-weight: bold;
 }
 
-#krxryxcqil .gt_font_italic {
+#zhrafnudhz .gt_font_italic {
   font-style: italic;
 }
 
-#krxryxcqil .gt_super {
+#zhrafnudhz .gt_super {
   font-size: 65%;
 }
 
-#krxryxcqil .gt_footnote_marks {
+#zhrafnudhz .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#krxryxcqil .gt_asterisk {
+#zhrafnudhz .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#krxryxcqil .gt_indent_1 {
+#zhrafnudhz .gt_indent_1 {
   text-indent: 5px;
 }
 
-#krxryxcqil .gt_indent_2 {
+#zhrafnudhz .gt_indent_2 {
   text-indent: 10px;
 }
 
-#krxryxcqil .gt_indent_3 {
+#zhrafnudhz .gt_indent_3 {
   text-indent: 15px;
 }
 
-#krxryxcqil .gt_indent_4 {
+#zhrafnudhz .gt_indent_4 {
   text-indent: 20px;
 }
 
-#krxryxcqil .gt_indent_5 {
+#zhrafnudhz .gt_indent_5 {
   text-indent: 25px;
 }
 
-#krxryxcqil .katex-display {
+#zhrafnudhz .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#krxryxcqil div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#zhrafnudhz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -888,7 +830,7 @@ Overall, the multiple linear regression model examines the associations between 
 
 
 Overall Model Performance:
-The regression model demonstrates an excellent overall fit, with an Adjusted R-squared of 0.9188, meaning the predictors explain approximately 91.88% of the variance in patient rates. The overall model is highly significant (F-test p-value &lt; 2.2e-16), and almost all individual predictors (SIMD, DischargeRates, AgeGroup, and Sex) are significant at the 0.1% level. The residual standard error is 79.34.
+The regression model demonstrates an excellent overall fit, with an Adjusted R-squared of 0.9188, meaning the predictors explain approximately 91.88% of the variance in patient rates. The overall model is highly significant (F-test p-value &lt; 2.2e-16), and almost all individual predictors (DeprivationGap, DischargeRates, AgeGroup, and Sex) are significant at the 0.1% level. The residual standard error is 79.34.
 
 However, the diagnostic plots indicate some deviations from standard assumptions. The Residuals vs Fitted plot shows a slight non-linear pattern (a curved red line) rather than random scatter, and the Q-Q plot shows slight deviations in the tails. This suggests that while the model's predictive power is very strong, there might be complex non-linear relationships or outliers within the data that could be further explored.
 

@@ -169,99 +169,61 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
 
 
 # Data Overview
-
+##deprivationgap per financial year
 ```{r}
-library(knitr)
-
-variable_table <- data.frame(
-  Variable = c(
-    "Sex",
-    "AgeGroup",
-    "DischargeRates",
-    "PatientsRates",
-    "DeprivationGap"
-  ),
-  Type = c(
-    "Categorical",
-    "Categorical",
-    "Numeric",
-    "Numeric",
-    "Numeric"
-  ),
-  Description = c(
-    "The patient's sex, as recorded on admission.",
-    "Refers to the patient's age on admission. Ages have been arranged in five different groups.",
-    "The annual number of discharges relative to the size of the population, expressed per 100,000 population.",
-    "The annual number of patients relative to the size of the population, expressed per 100,000 population.",
-    "The deprivation gap is calculated as DR_SIMD_1 minus DR_SIMD_5 (SIMD1 - SIMD5).The Scottish Index of Multiple Deprivation (SIMD) identifies concentrations of multiple deprivation across Scotland. Data zones are arranged into five groups, from the most deprived (1) to the least deprived (5).DR_SIMD_1 means the deprivtaion which in the area with SIMD 1,DR_SIMD_5 means the deprivtaion which in the area with SIMD 5 "
-  )
-)
-
-knitr::kable(
-  variable_table,
-  format = "html",
-  col.names = c("Variable", "Type", "Description"),
-  align = "lll"
-)
-```
-
----
-
-class: middle
-
-# Exploratory Data Analysis
-
-<style>
-.remark-slide-content table {
-  width: 90% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-.remark-slide-content table th,
-.remark-slide-content table td {
-  font-size: 18px !important;
-  padding: 5px 7px !important;
-  line-height: 1.15 !important;
-}
-</style>
-## Boxplot for the Study of Mental Health Inpatient Rates across SIMD Quantiles in Scotland
-```{r simd-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
-age_sex <- read_csv("age.sex.csv")
+
 deprivation <- read_csv("deprivation.csv")
+
 plot_deprivation <- deprivation %>%
+  mutate(
+    HBR = tolower(trimws(HBR)),
+    Dataset = trimws(Dataset),
+    SIMD = as.numeric(as.character(SIMD))
+  ) %>%
   filter(
     Dataset == "SMR04",
-    HBR == "S92000003",
-    SIMD %in% 1:5,
+    HBR == "s92000003",
+    SIMD %in% c(1, 5),
     is.finite(PatientsRates)
   ) %>%
+  group_by(FinancialYear, SIMD) %>%
+  summarise(
+    PatientsRates = mean(PatientsRates),
+    .groups = "drop"
+  ) %>%
+  pivot_wider(
+    names_from = SIMD,
+    values_from = PatientsRates,
+    names_prefix = "SIMD"
+  ) %>%
+  filter(
+    !is.na(SIMD1),
+    !is.na(SIMD5)
+  ) %>%
   mutate(
-    SIMD = factor(SIMD, levels = 1:5)
+    deprivationgap = SIMD1 - SIMD5
   )
-ggplot(plot_deprivation,
-                 aes(x = SIMD,
-                     y = PatientsRates,
-                     fill = SIMD)) +
-  geom_boxplot(alpha = 0.7) +
-  scale_fill_manual(
-    values = c(
-      "1" = "#E63946",
-      "2" = "#457B9D",
-      "3" = "#2A9D8F",
-      "4" = "#9B59B6",
-      "5" = "#F4A261"
-    )
+
+ggplot(plot_deprivation, aes(x = FinancialYear, y = deprivationgap)) +
+  geom_point(
+    color = "#E63946",
+    size = 3,
+    alpha = 0.8
   ) +
   labs(
-    title = "Mental Health Inpatient Rates by SIMD",
+    title = "Mental Health Inpatient Rate Gap",
     subtitle = "Scotland",
-    x = "SIMD Quintile",
-    y = "Patients per 100,000 Population"
+    x = "Financial Year",
+    y = "Deprivation Gap (SIMD 1 - SIMD 5)\nPatients per 100,000 Population"
   ) +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 ```
 
 
@@ -397,6 +359,7 @@ class: middle
 library(dplyr)
 library(tidyr)
 library(htmltools)
+
 calc_stats <- function(data, group_var, var_name) {
   data %>%
     group_by(Group = as.character(.data[[group_var]])) %>%
@@ -406,75 +369,167 @@ calc_stats <- function(data, group_var, var_name) {
       IQR = round(IQR(PatientsRates, na.rm = TRUE), 2),
       Min = round(min(PatientsRates, na.rm = TRUE), 2),
       Max = round(max(PatientsRates, na.rm = TRUE), 2),
-      N = n(), .groups = 'drop'
+      N = n(),
+      .groups = "drop"
     ) %>%
     mutate(`Grouping Variable` = var_name) %>%
     select(`Grouping Variable`, Group, Mean, Median, IQR, Min, Max, N)
 }
 
-clean_patients <- merged_data %>% rename(PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")))
+clean_patients <- merged_data %>%
+  rename(PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")))
 
-deprivation <- readr::read_csv("deprivation.csv", show_col_types = FALSE)
+deprivation <- readr::read_csv(
+  "deprivation.csv",
+  show_col_types = FALSE
+)
 
-simd_stats <- deprivation %>%
+deprivation_gap_data <- deprivation %>%
+  mutate(
+    HBR = tolower(trimws(HBR)),
+    Dataset = trimws(Dataset),
+    SIMD = as.numeric(as.character(SIMD))
+  ) %>%
   filter(
     Dataset == "SMR04",
-    HBR == "S92000003",
-    as.character(SIMD) %in% as.character(1:5),
+    HBR == "s92000003",
+    SIMD %in% c(1, 5),
     is.finite(PatientsRates)
   ) %>%
-  group_by(Group = as.character(SIMD)) %>%
+  group_by(FinancialYear, SIMD) %>%
   summarise(
-    Mean = round(mean(PatientsRates, na.rm = TRUE), 2),
-    Median = round(median(PatientsRates, na.rm = TRUE), 2),
-    IQR = round(IQR(PatientsRates, na.rm = TRUE), 2),
-    Min = round(min(PatientsRates, na.rm = TRUE), 2),
-    Max = round(max(PatientsRates, na.rm = TRUE), 2),
-    N = n(),
+    PatientsRates = mean(PatientsRates, na.rm = TRUE),
     .groups = "drop"
   ) %>%
-  mutate(`Grouping Variable` = "SIMD (Levels 1-5)") %>%
-  select(`Grouping Variable`, Group, Mean, Median, IQR, Min, Max, N)
+  pivot_wider(
+    names_from = SIMD,
+    values_from = PatientsRates,
+    names_prefix = "SIMD"
+  ) %>%
+  filter(
+    !is.na(SIMD1),
+    !is.na(SIMD5)
+  ) %>%
+  mutate(
+    deprivationgap = SIMD1 - SIMD5
+  )
 
-age_stats <- calc_stats(clean_patients, "AgeGroup", "Age Group")
-sex_stats <- calc_stats(clean_patients, "Sex", "Sex")
+deprivationgap_stats <- deprivation_gap_data %>%
+  summarise(
+    Mean = round(mean(deprivationgap), 2),
+    Median = round(median(deprivationgap), 2),
+    IQR = round(IQR(deprivationgap), 2),
+    Min = round(min(deprivationgap), 2),
+    Max = round(max(deprivationgap), 2),
+    N = n()
+  ) %>%
+  mutate(
+    `Grouping Variable` = "Deprivation Gap",
+    Group = "Scotland"
+  ) %>%
+  select(
+    `Grouping Variable`,
+    Group,
+    Mean,
+    Median,
+    IQR,
+    Min,
+    Max,
+    N
+  )
 
-final_summary_table <- bind_rows(simd_stats, age_stats, sex_stats)
+age_stats <- calc_stats(
+  clean_patients,
+  "AgeGroup",
+  "Age Group"
+)
+
+sex_stats <- calc_stats(
+  clean_patients,
+  "Sex",
+  "Sex"
+)
+
+final_summary_table <- bind_rows(
+  deprivationgap_stats,
+  age_stats,
+  sex_stats
+)
+
 final_df <- as.data.frame(final_summary_table)
+
 html_code <- '<table style="border-collapse: collapse; width: 85%; margin: auto; font-family: Arial, sans-serif; font-size: 14px;">'
-html_code <- paste0(html_code, '<thead><tr style="border: 2px solid black; background-color: #333333; color: white;">')
+
+html_code <- paste0(
+  html_code,
+  '<thead><tr style="border: 2px solid black; background-color: #333333; color: white;">'
+)
+
 for (col in names(final_df)) {
-  html_code <- paste0(html_code, '<th style="padding: 8px; border: 1px solid black; text-align: center;">', col, '</th>')
+  html_code <- paste0(
+    html_code,
+    '<th style="padding: 8px; border: 1px solid black; text-align: center;">',
+    col,
+    '</th>'
+  )
 }
+
 html_code <- paste0(html_code, '</tr></thead><tbody>')
+
 for (i in 1:nrow(final_df)) {
 
-  group_name <- final_df[i, 1]
+  group_name <- as.character(final_df[i, 1][[1]])
+
   if (group_name == "Age Group") {
-    bg_color <- "#E8F4F8" 
+    bg_color <- "#E8F4F8"
   } else if (group_name == "Sex") {
-    bg_color <- "#E8F8E8" 
-  } else if (group_name == "SIMD (Levels 1-5)") {
-    bg_color <- "#FFF8E8" 
+    bg_color <- "#E8F8E8"
+  } else if (group_name == "Deprivation Gap") {
+    bg_color <- "#FFF8E8"
   } else {
     bg_color <- "white"
   }
-  
-  html_code <- paste0(html_code, '<tr style="border: 1px solid black; background-color: ', bg_color, ';">')
-  
+
+  html_code <- paste0(
+    html_code,
+    '<tr style="border: 1px solid black; background-color: ',
+    bg_color,
+    ';">'
+  )
+
   for (j in 1:ncol(final_df)) {
-  
-    if (j == 1 && i > 1 && final_df[i, j] == final_df[i-1, j]) {
+
+    if (
+      j == 1 &&
+      i > 1 &&
+      final_df[i, j] == final_df[i - 1, j]
+    ) {
       cell_val <- ""
     } else {
       cell_val <- final_df[i, j]
     }
-    align_style <- if(j <= 2) "text-align: left; padding-left: 10px;" else "text-align: center;"
-    html_code <- paste0(html_code, '<td style="padding: 8px; border: 1px solid black; ', align_style, '">', cell_val, '</td>')
+
+    align_style <- if (j <= 2) {
+      "text-align: left; padding-left: 10px;"
+    } else {
+      "text-align: center;"
+    }
+
+    html_code <- paste0(
+      html_code,
+      '<td style="padding: 8px; border: 1px solid black; ',
+      align_style,
+      '">',
+      cell_val,
+      '</td>'
+    )
   }
+
   html_code <- paste0(html_code, '</tr>')
 }
+
 html_code <- paste0(html_code, '</tbody></table>')
+
 browsable(HTML(html_code))
 ```
 
@@ -537,7 +592,7 @@ ggplot(
 *IQR / Min / Max
 - The 25–39 age group has the largest IQR.
 - Males have a larger IQR than females.
-- SIMD 1 has higher patient rates than SIMD 5.
+- The Deprivation Gap (SIMD 1 − SIMD 5) is consistently positive, indicating higher mental health inpatient rates in the most deprived areas compared to the least deprived areas.
 
 *Prediction for Regression
 - We expect age, sex and discharge rates to be related to patient rates.
@@ -783,7 +838,7 @@ Results：
 
 The Intercept (Alpha) is positive (113.8687). This represents the baseline patient rate when all independent variables are at their reference levels or zero. The p-value of 0.01973 is less than 0.05, indicating that this baseline value is statistically significant at the 5% level.
 
-The deprivation gap coefficient is negative (-0.3681), meaning that for every one-unit increase in the discharge-rate gap between SIMD 1 and SIMD 5, the patient rate decreases by approximately 0.3681, holding other variables constant. The p-value of 7.59e-05 indicates that this result is statistically significant at the 0.1% level (p < 0.001).
+The deprivation gap coefficient is negative (-0.3681), meaning that for every one-unit increase in the Deprivation Gap (SIMD 1 − SIMD 5), the patient rate decreases by approximately 0.3681, holding other variables constant. The p-value of 7.59e-05 indicates that this result is statistically significant at the 0.1% level (p < 0.001).
 
 The coefficient for DischargeRates is positive (0.3218). This indicates a positive relationship: for every one-unit increase in discharge rates, the patient rate increases by approximately 0.3218. The p-value of 0.00392 is less than 0.01, demonstrating statistical significance at the 1% level.
 
@@ -833,7 +888,7 @@ Overall, the multiple linear regression model examines the associations between 
 
 
 Overall Model Performance:
-The regression model demonstrates an excellent overall fit, with an Adjusted R-squared of 0.9188, meaning the predictors explain approximately 91.88% of the variance in patient rates. The overall model is highly significant (F-test p-value < 2.2e-16), and almost all individual predictors (SIMD, DischargeRates, AgeGroup, and Sex) are significant at the 0.1% level. The residual standard error is 79.34.
+The regression model demonstrates an excellent overall fit, with an Adjusted R-squared of 0.9188, meaning the predictors explain approximately 91.88% of the variance in patient rates. The overall model is highly significant (F-test p-value < 2.2e-16), and almost all individual predictors (DeprivationGap, DischargeRates, AgeGroup, and Sex) are significant at the 0.1% level. The residual standard error is 79.34.
 
 However, the diagnostic plots indicate some deviations from standard assumptions. The Residuals vs Fitted plot shows a slight non-linear pattern (a curved red line) rather than random scatter, and the Q-Q plot shows slight deviations in the tails. This suggests that while the model's predictive power is very strong, there might be complex non-linear relationships or outliers within the data that could be further explored.
 
@@ -858,7 +913,7 @@ Factors Associated with Patient Rates (PR) and Their Relationships:
 The regression results indicate that all independent variables are statistically significant in relation to mental health inpatient patient rates. Specifically:
 
 SIMD: There is a significant negative relationship（β=−0.3681,p<0.001). Higher levels of socio-economic deprivation (or the specific SIMD indicator used) are associated with lower patient rates.
-DischargeRates: There is a significant positive relationship (β=0.3218,p<0.01). Higher discharge rates are associated with higher patient rates.
+DischargeRates: There is a significant positive relationship (β=0.3218,Deprivation Gap: There is a significant negative relationship (β = -0.3681, p < 0.001)). Higher discharge rates are associated with higher patient rates.
 AgeGroup: Compared to the reference group (0-17 years), older age groups show significantly higher patient rates. The disparity increases with age, peaking at the 65plus group, which has a substantially higher rate (β=797.5376,p<0.001).
 Sex: There is a significant positive relationship for males (β=105.4133,p<0.001). Specifically, males have an expected patient rate that is approximately 105.4 units higher than females (the reference group).
 
@@ -872,5 +927,7 @@ Despite the strong predictive power of the model (R square=0.9073), this study h
 
 Limited Temporal Data: The dataset covers a relatively short time frame (limited number of years). This restricts the model's ability to capture long-term trends, structural breaks, or delayed effects of socioeconomic changes on mental health patient rates over time.
 
-Omission of Other Influencing Factors: The model includes the discharge-rate gap between SIMD 1 and SIMD 5, mean discharge rates, age group, and sex. Other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included.
+Omission of Other Influencing Factors: **Omission of Other Influencing Factors:**
+
+The model includes the Deprivation Gap (the discharge-rate difference between SIMD 1 and SIMD 5), mean discharge rates, age group, and sex. However, other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included. These omitted variables may also influence mental health inpatient rates. Other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included.
 
