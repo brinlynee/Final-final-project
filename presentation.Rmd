@@ -138,6 +138,8 @@ write_csv(merged_data, "merged_mental_health.csv")
 class: middle
 # Introduction
 ---
+
+
 <style>
 .intro-layout .pull-left img {
   width: 100%;
@@ -159,9 +161,20 @@ class: middle
 <img src="img/introduction picture.jpg">
 ]
 
+
 .pull-right[
+<div style="
+  text-align: center;
+  font-size: 28px;
+  line-height: 1.5;
+  margin-top: 50px;
+">
+
 Investigating the factors influencing patient rates can assist the Scottish Government in implementing targeted interventions for potential mental health patients (e.g., based on gender, age, and level of deprivation). This will help reduce the incidence of mental illness.
+
+</div>
 ]
+
 
 
 
@@ -170,7 +183,7 @@ class: middle
 
 # Data Overview
 ---
-```{r}
+```{r, echo=FALSE, results='asis'}
 library(knitr)
 
 variable_table <- data.frame(
@@ -197,93 +210,42 @@ variable_table <- data.frame(
   )
 )
 
-knitr::kable(
-  variable_table,
-  format = "html",
-  col.names = c("Variable", "Type", "Description"),
-  align = "lll"
+
+cat('
+<div style="
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+">
+')
+
+cat(
+  knitr::kable(
+    variable_table,
+    format = "html",
+    col.names = c("Variable", "Type", "Description"),
+    align = "lll",
+    table.attr = 'style="
+      width: 100%;
+      margin: 0 auto;
+      font-size: 14px;
+      table-layout: auto;
+    "'
+  )
 )
+
+cat('</div>')
+
 ```
 ---
 class: middle
 # Exploratory Data Analysis
----
-<style>
-.remark-slide-content table {
-  width: 90% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-.remark-slide-content table th,
-.remark-slide-content table td {
-  font-size: 18px !important;
-  padding: 5px 7px !important;
-  line-height: 1.15 !important;
-}
-</style>
-##deprivation gap per financial year
-```{r}
-library(tidyverse)
-
-deprivation <- read_csv("deprivation.csv")
-
-plot_deprivation <- deprivation %>%
-  mutate(
-    HBR = tolower(trimws(HBR)),
-    Dataset = trimws(Dataset),
-    SIMD = as.numeric(as.character(SIMD))
-  ) %>%
-  filter(
-    Dataset == "SMR04",
-    HBR == "s92000003",
-    SIMD %in% c(1, 5),
-    is.finite(PatientsRates)
-  ) %>%
-  group_by(FinancialYear, SIMD) %>%
-  summarise(
-    PatientsRates = mean(PatientsRates),
-    .groups = "drop"
-  ) %>%
-  pivot_wider(
-    names_from = SIMD,
-    values_from = PatientsRates,
-    names_prefix = "SIMD"
-  ) %>%
-  filter(
-    !is.na(SIMD1),
-    !is.na(SIMD5)
-  ) %>%
-  mutate(
-    deprivationgap = SIMD1 - SIMD5
-  )
-
-ggplot(plot_deprivation, aes(x = FinancialYear, y = deprivationgap)) +
-  geom_point(
-    color = "#E63946",
-    size = 3,
-    alpha = 0.8
-  ) +
-  labs(
-    title = "Mental Health Inpatient Rate Gap",
-    subtitle = "Scotland",
-    x = "Financial Year",
-    y = "Deprivation Gap (SIMD 1 - SIMD 5)\nPatients per 100,000 Population"
-  ) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(size = 16, face = "bold"),
-    plot.subtitle = element_text(size = 12),
-    axis.title = element_text(size = 12),
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
-```
 
 
 
 ---
-
-
 
 <style>
 .remark-slide-content table {
@@ -382,11 +344,11 @@ ggplot(age_plot,
 ```
 
 ---
-class: middle
+class: middle,center
 
 <style>
 .remark-slide-content.large-summary {
-  padding: 12px 24px !important;
+  padding: 20px 24px !important;
 }
 
 .remark-slide-content.large-summary table {
@@ -397,7 +359,7 @@ class: middle
 .remark-slide-content.large-summary th,
 .remark-slide-content.large-summary td {
   font-size: 24px !important;
-  padding: 7px 10px !important;
+  padding: 10px 10px !important;
   line-height: 1.2 !important;
 }
 </style>
@@ -427,65 +389,6 @@ calc_stats <- function(data, group_var, var_name) {
 clean_patients <- merged_data %>%
   rename(PatientsRates = any_of(c("PatientsRates.x", "PatientsRates")))
 
-deprivation <- readr::read_csv(
-  "deprivation.csv",
-  show_col_types = FALSE
-)
-
-deprivation_gap_data <- deprivation %>%
-  mutate(
-    HBR = tolower(trimws(HBR)),
-    Dataset = trimws(Dataset),
-    SIMD = as.numeric(as.character(SIMD))
-  ) %>%
-  filter(
-    Dataset == "SMR04",
-    HBR == "s92000003",
-    SIMD %in% c(1, 5),
-    is.finite(PatientsRates)
-  ) %>%
-  group_by(FinancialYear, SIMD) %>%
-  summarise(
-    PatientsRates = mean(PatientsRates, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  pivot_wider(
-    names_from = SIMD,
-    values_from = PatientsRates,
-    names_prefix = "SIMD"
-  ) %>%
-  filter(
-    !is.na(SIMD1),
-    !is.na(SIMD5)
-  ) %>%
-  mutate(
-    deprivationgap = SIMD1 - SIMD5
-  )
-
-deprivationgap_stats <- deprivation_gap_data %>%
-  summarise(
-    Mean = round(mean(deprivationgap), 2),
-    Median = round(median(deprivationgap), 2),
-    IQR = round(IQR(deprivationgap), 2),
-    Min = round(min(deprivationgap), 2),
-    Max = round(max(deprivationgap), 2),
-    N = n()
-  ) %>%
-  mutate(
-    `Grouping Variable` = "Deprivation Gap",
-    Group = "Scotland"
-  ) %>%
-  select(
-    `Grouping Variable`,
-    Group,
-    Mean,
-    Median,
-    IQR,
-    Min,
-    Max,
-    N
-  )
-
 age_stats <- calc_stats(
   clean_patients,
   "AgeGroup",
@@ -499,14 +402,13 @@ sex_stats <- calc_stats(
 )
 
 final_summary_table <- bind_rows(
-  deprivationgap_stats,
   age_stats,
   sex_stats
 )
 
 final_df <- as.data.frame(final_summary_table)
 
-html_code <- '<table style="border-collapse: collapse; width: 85%; margin: auto; font-family: Arial, sans-serif; font-size: 14px;">'
+html_code <- '<table style="border-collapse: collapse; table-layout: fixed; width: 100%; margin: 0 auto; font-family: Arial, sans-serif; font-size: 12px;">'
 
 html_code <- paste0(
   html_code,
@@ -532,8 +434,6 @@ for (i in 1:nrow(final_df)) {
     bg_color <- "#E8F4F8"
   } else if (group_name == "Sex") {
     bg_color <- "#E8F8E8"
-  } else if (group_name == "Deprivation Gap") {
-    bg_color <- "#FFF8E8"
   } else {
     bg_color <- "white"
   }
@@ -578,9 +478,89 @@ for (i in 1:nrow(final_df)) {
 
 html_code <- paste0(html_code, '</tbody></table>')
 
+html_code <- paste0(
+  '<div style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+  ">',
+  html_code,
+  '</div>'
+)
+
 browsable(HTML(html_code))
 ```
 
+---
+<style>
+.remark-slide-content table {
+  width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.remark-slide-content table th,
+.remark-slide-content table td {
+  font-size: 18px !important;
+  padding: 5px 7px !important;
+  line-height: 1.15 !important;
+}
+</style>
+##deprivation gap across patient rate
+```{r}
+
+library(tidyverse)
+
+# Load the merged dataset
+plot_data <- read_csv("merged_mental_health.csv") %>%
+  mutate(
+    deprivation_gap = DR_SIMD_1 - DR_SIMD_5
+  ) %>%
+  filter(
+    is.finite(deprivation_gap),
+    is.finite(PatientsRates),
+    !is.na(AgeGroup)
+  )
+
+# Scatter plot
+ggplot(
+  plot_data,
+  aes(
+    x = deprivation_gap,
+    y = PatientsRates,
+    color = AgeGroup
+  )
+) +
+  geom_point(
+    size = 2.5,
+    alpha = 0.6
+  ) +
+  geom_smooth(
+    aes(group = 1),
+    method = "lm",
+    formula = y ~ x,
+    color = "#E63946",
+    se = FALSE,
+    linewidth = 1
+  ) +
+  labs(
+    title = "Deprivation Gap vs Patient Rates",
+    subtitle = "Scotland",
+    x = "Deprivation Gap (SIMD 1 - SIMD 5)",
+    y = "Patient Rate per 100,000 Population",
+    color = "Age Group"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(size = 12),
+    legend.position = "right"
+  )
+
+```
 
 
 
@@ -589,7 +569,8 @@ browsable(HTML(html_code))
 
 ## Mean Discharge Rates vs Patient Rates by Age Group
 
-```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.8, out.width="75%", fig.align="center"}
+```{r,echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.8, out.width="85%", fig.align="center"}
+
 library(tidyverse)
 merged_data <- read_csv("merged_data.csv")
 merged_data <- merged_data %>%
@@ -640,7 +621,6 @@ ggplot(
 *IQR / Min / Max
 - The 25–39 age group has the largest IQR.
 - Males have a larger IQR than females.
-- The Deprivation Gap (SIMD 1 − SIMD 5) is consistently positive, indicating higher mental health inpatient rates in the most deprived areas compared to the least deprived areas.
 
 *Prediction for Regression
 - We expect age, sex and discharge rates to be related to patient rates.
@@ -653,6 +633,7 @@ ggplot(
 - As discharge rates increase, patient rates show little overall change.
 
 ---
+class:middle,center
 
 <style>
 .remark-slide-content.correlation-slide table {
@@ -804,7 +785,7 @@ Represents the residual variance at time t. It captures the unobserved factors, 
 
 ---
 ## Regression Table for the Study of Factors Associated with Mental Health Inpatient Rates in Scotland
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 library(dplyr)
 
 merged_data <- read.csv("merged_mental_health.csv")
@@ -868,18 +849,43 @@ final_table <- table_data[, c(
   "Standard_Error"
 )]
 
-knitr::kable(
-  final_table,
-  caption = "Regression Results"
+cat(
+  knitr::kable(
+    final_table,
+    format = "html",
+    caption = "Regression Results",
+    escape = TRUE,
+    align = "lcc",
+    table.attr = 'style="
+      width: 85%;
+      margin: 0 auto;
+      font-size: 16px;
+      border-collapse: collapse;
+    "'
+  ),
+  sep = "\n"
 )
+
+cat('
+<p style="
+  text-align: center;
+  font-size: 14px;
+  margin-top: 12px;
+">
+*** p &lt; 0.001;
+** p &lt; 0.01;
+* p &lt; 0.05
+</p>
+')
+
 ```
 
-*** p < 0.001，** p < 0.01，* p < 0.05
 
-```{r}
+<CodeBlock language="r" editable>
+```{r, include=FALSE}
 summary(model_full)
 ```
-
+---
 Results：
 
 The Intercept (Alpha) is positive (113.8687). This represents the baseline patient rate when all independent variables are at their reference levels or zero. The p-value of 0.01973 is less than 0.05, indicating that this baseline value is statistically significant at the 5% level.
@@ -910,34 +916,71 @@ plot(model_merged, which = c(1, 2, 3, 5))
 par(mfrow = c(1, 1))
 ```
 
----
-#Residual Diagnostics of the Multiple Linear Regression Model
----
-The diagnostic plots assess the multiple linear regression model using deprivation gap, mean discharge rates, age group, and sex as explanatory 
-variables.
 
-Residuals vs Fitted Plot：
+---
+
+<div style="
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  text-align: center;
+  font-size: 46px;
+  font-weight: bold;
+  line-height: 1.2;
+">
+Residual Diagnostics of the Multiple Linear Regression Model
+</div>
+
+---
+<div style="
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  font-size: 17px;
+  line-height: 1.2;
+  text-align: left;
+  white-space: pre-line;
+">
+*Residuals vs Fitted Plot：
 Most residuals are distributed around the zero line. However, the red line shows some fluctuations and is not completely horizontal. There are also some relatively large residuals. This suggests that the model may not fully capture the linear relationship between the variables.
 
-Normal Q-Q Plot：
+*Normal Q-Q Plot：
 Most points follow the general pattern of the reference line. However, several points deviate from the line, especially in the upper tail. This suggests that the residuals may not fully follow a normal distribution.
 
-Scale-Location Plot：
+*Scale-Location Plot：
 The red line shows a slight upward trend, especially at higher fitted values. The spread of the points is not completely consistent across the fitted values. This suggests that the model may have a heteroscedasticity problem, meaning that the error variance is not constant. HC3 robust standard errors can help improve the reliability of statistical inference.
 
-Residuals vs Leverage Plot：
+*Residuals vs Leverage Plot：
 Most observations are clustered within a similar leverage range. However, a few observations have relatively higher leverage or larger standardized residuals. These observations may influence the model, so they should be further examined using Cook's Distance.
 
-Overall Conclusion：
+*Overall Conclusion：
 Overall, the multiple linear regression model examines the associations between PatientsRates and deprivation gap, mean discharge rates, age group, and sex. The Residuals vs Fitted Plot shows some fluctuations, suggesting that the model may not fully capture the relationship between the variables. The Normal Q-Q Plot indicates that some residuals deviate from the reference line, particularly in the upper tail, suggesting that the residuals may not follow a normal distribution. The Scale-Location Plot shows a slight upward trend, indicating possible heteroscedasticity. In addition, the Residuals vs Leverage Plot identifies a few observations with relatively high leverage or large standardized residuals, which should be further examined using Cook's Distance. HC3 robust standard errors can help improve the reliability of statistical inference, particularly when heteroscedasticity is present. Therefore, the model is useful but could be improved further.
 
+</div>
 ---
 
+<div style="
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  font-size: 22px;
+  line-height: 1.4;
+  text-align: left;
+  white-space: pre-line;
+">
 
 Overall Model Performance:
 The regression model demonstrates an excellent overall fit, with an Adjusted R-squared of 0.9188, meaning the predictors explain approximately 91.88% of the variance in patient rates. The overall model is highly significant (F-test p-value < 2.2e-16), and almost all individual predictors (DeprivationGap, DischargeRates, AgeGroup, and Sex) are significant at the 0.1% level. The residual standard error is 79.34.
 
 However, the diagnostic plots indicate some deviations from standard assumptions. The Residuals vs Fitted plot shows a slight non-linear pattern (a curved red line) rather than random scatter, and the Q-Q plot shows slight deviations in the tails. This suggests that while the model's predictive power is very strong, there might be complex non-linear relationships or outliers within the data that could be further explored.
+
+</div>
 
 ---
 Sensitivity Analysis for Linear Regression
@@ -961,6 +1004,7 @@ The regression results indicate that all independent variables are statistically
 
 SIMD: There is a significant negative relationship（β=−0.3681,p<0.001). Higher levels of socio-economic deprivation (or the specific SIMD indicator used) are associated with lower patient rates.
 DischargeRates: There is a significant positive relationship (β=0.3218,Deprivation Gap: There is a significant negative relationship (β = -0.3681, p < 0.001)). Higher discharge rates are associated with higher patient rates.
+
 AgeGroup: Compared to the reference group (0-17 years), older age groups show significantly higher patient rates. The disparity increases with age, peaking at the 65plus group, which has a substantially higher rate (β=797.5376,p<0.001).
 Sex: There is a significant positive relationship for males (β=105.4133,p<0.001). Specifically, males have an expected patient rate that is approximately 105.4 units higher than females (the reference group).
 
