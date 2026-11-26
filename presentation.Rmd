@@ -134,10 +134,10 @@ summary(model_deprivation)
 write_csv(merged_data, "merged_mental_health.csv")
 ```
 
-class: intro-layout
 
+class: middle
 # Introduction
-
+---
 <style>
 .intro-layout .pull-left img {
   width: 100%;
@@ -166,10 +166,63 @@ Investigating the factors influencing patient rates can assist the Scottish Gove
 
 
 ---
-
+class: middle
 
 # Data Overview
-##deprivationgap per financial year
+---
+```{r}
+library(knitr)
+
+variable_table <- data.frame(
+  Variable = c(
+    "Sex",
+    "AgeGroup",
+    "DischargeRates",
+    "PatientsRates",
+    "DeprivationGap"
+  ),
+  Type = c(
+    "Categorical",
+    "Categorical",
+    "Numeric",
+    "Numeric",
+    "Numeric"
+  ),
+  Description = c(
+    "The patient's sex, as recorded on admission.",
+    "Refers to the patient's age on admission. Ages have been arranged in five different groups.",
+    "The annual number of discharges relative to the size of the population, expressed per 100,000 population.",
+    "The annual number of patients relative to the size of the population, expressed per 100,000 population.",
+    "The deprivation gap is calculated as DR_SIMD_1 minus DR_SIMD_5 (SIMD1 - SIMD5).The Scottish Index of Multiple Deprivation (SIMD) identifies concentrations of multiple deprivation across Scotland. Data zones are arranged into five groups, from the most deprived (1) to the least deprived (5).DR_SIMD_1 means the deprivtaion which in the area with SIMD 1,DR_SIMD_5 means the deprivtaion which in the area with SIMD 5 "
+  )
+)
+
+knitr::kable(
+  variable_table,
+  format = "html",
+  col.names = c("Variable", "Type", "Description"),
+  align = "lll"
+)
+```
+---
+class: middle
+# Exploratory Data Analysis
+---
+<style>
+.remark-slide-content table {
+  width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.remark-slide-content table th,
+.remark-slide-content table td {
+  font-size: 18px !important;
+  padding: 5px 7px !important;
+  line-height: 1.15 !important;
+}
+</style>
+##deprivation gap per financial year
 ```{r}
 library(tidyverse)
 
@@ -227,12 +280,10 @@ ggplot(plot_deprivation, aes(x = FinancialYear, y = deprivationgap)) +
 ```
 
 
+
 ---
 
 
-class: middle
-
-# Exploratory Data Analysis
 
 <style>
 .remark-slide-content table {
@@ -273,9 +324,6 @@ ggplot(age.sex,
 ---
 
 
-class: middle
-
-# Exploratory Data Analysis
 
 <style>
 .remark-slide-content table {
@@ -353,8 +401,8 @@ class: middle
   line-height: 1.2 !important;
 }
 </style>
-## Summary Table for the Study of Mental Health Inpatient Rates across SIMD Quintiles, Age Groups, and Sex in Scotland
-
+## Summary Table for the Study of Mental Health Inpatient Rates across Deprivation Gap, Age Groups, and Sex in Scotland
+---
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(dplyr)
 library(tidyr)
@@ -709,9 +757,9 @@ gt_table
 ```
 
 ---
-
+class:middle
 #Methodology
-
+---
 Regression Model:
 
 $$\begin{aligned} \text{PatientsRates}_{t} &= \alpha + \beta_1 \cdot \text{DeprivationGap}_{t} \\ &\quad + \beta_2 \cdot \text{DischargeRates}_{t} \\ &\quad + \beta_3 \cdot \text{AgeGroup}_{t} + \beta_4 \cdot \text{Sex}_{t} \end{aligned}$$
@@ -754,7 +802,7 @@ Represents the specific time period (e.g., a specific Financial Year) for which 
 Error term (ε_t):
 Represents the residual variance at time t. It captures the unobserved factors, random shocks, or measurement errors that affect the dependent variable at that specific time period but are not included in the model.
 
-
+---
 ## Regression Table for the Study of Factors Associated with Mental Health Inpatient Rates in Scotland
 ```{r}
 library(dplyr)
@@ -785,13 +833,11 @@ table_data <- data.frame(
   row.names = NULL
 )
 
-table_data$Stars <- ifelse(
-  table_data$P_value < 0.01, "***",
-  ifelse(
-    table_data$P_value < 0.05, "**",
-    ifelse(table_data$P_value < 0.1, "*", "")
-  )
-)
+table_data$Stars <- ""
+table_data$Stars[table_data$P_value < 0.05] <- "*"
+table_data$Stars[table_data$P_value < 0.01] <- "**"
+table_data$Stars[table_data$P_value < 0.001] <- "***"
+
 
 table_data$Coefficient <- paste0(
   sprintf("%.4f", table_data$Coefficient),
@@ -828,7 +874,7 @@ knitr::kable(
 )
 ```
 
-* p < 0.1, ** p < 0.05, *** p < 0.01
+*** p < 0.001，** p < 0.01，* p < 0.05
 
 ```{r}
 summary(model_full)
@@ -847,8 +893,9 @@ The coefficients for the AgeGroup are all positive and highly significant compar
 The coefficient for SexMale is positive (105.4133). This indicates that, compared to the reference group (females), the male patient rate is higher by 105.4133. The p-value of < 2e-16 indicates that this gender difference is statistically significant at the 0.1% level.
 
 ---
-
+class:middle
 ## Residual Diagnostics for the Multiple Linear Regression Model
+---
 ```{r}
 model_merged <- lm(
   PatientsRates ~ AgeGroup + Sex +
@@ -864,8 +911,8 @@ par(mfrow = c(1, 1))
 ```
 
 ---
-Residual Diagnostics of the Multiple Linear Regression Model
-
+#Residual Diagnostics of the Multiple Linear Regression Model
+---
 The diagnostic plots assess the multiple linear regression model using deprivation gap, mean discharge rates, age group, and sex as explanatory 
 variables.
 
@@ -904,7 +951,7 @@ Sensitivity Analysis for Linear Regression
 
 
 
-Analysis：
+
 
 
 ---
