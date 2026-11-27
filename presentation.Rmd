@@ -262,7 +262,7 @@ class: middle
 }
 </style>
 
-## Boxplot for the Study of Mental Health patient rates across Sex Groups in Scotland
+## Boxplot for the Study of Mental Health Patients Rates across Sex Groups in Scotland
 ```{r sex-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
 
@@ -299,7 +299,7 @@ ggplot(age.sex,
   line-height: 1.15 !important;
 }
 </style>
-## Boxplot for the Study of Mental Health patient rates across Age Groups in Scotland
+## Boxplot for the Study of Mental Health Patient Rates across Age Groups in Scotland
 
 ```{r age-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
@@ -361,7 +361,7 @@ class: middle,center
   line-height: 1.2 !important;
 }
 </style>
-## Summary Table for the Study of Mental Health patient rates across Deprivation Gap, Age Groups, and Sex in Scotland
+## Summary Table for the Study of Mental Health “Patients Rates across Deprivation Gap, Age Groups, and Sex in Scotland
 ---
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(dplyr)
@@ -506,7 +506,7 @@ browsable(HTML(html_code))
   line-height: 1.15 !important;
 }
 </style>
-##deprivation gap across patient rate
+##Deprivation Gap across Patients Rates
 ```{r}
 
 library(tidyverse)
@@ -613,23 +613,21 @@ ggplot(
 
 
 
-*Skewness
+Skewness
 - Most groups are right-skewed, with some high-value outliers.
 
-*IQR / Min / Max
+IQR / Min / Max
 - The 25–39 age group has the largest IQR.
 - Males have a larger IQR than females.
 
-*Prediction for Regression
+Prediction for Regression
 - We expect age group, sex and discharge rates to be related to patient rates.
 - Older age groups and males may have higher patient rates.
 
-*Scatter Plot Trend
-- X (Independent variable): Mean Discharge Rates
-- Y(Dependent variable): Patient Rates
-- The regression line is almost flat, with a slight downward trend.
-- As discharge rates increase, patient rates show little overall change.
-
+Scatter Plot Trend
+- Deprivation Gap vs Patient Rates: A very weak negative relationship.
+- Mean Discharge Rates vs Patient Rates: An almost flat regression line, indicating a very weak negative relationship.
+- Age Group:Patient rates are highest for ages 65+ and lowest for ages 0–17.
 ---
 class:middle,center
 
@@ -651,7 +649,7 @@ class:middle,center
 }
 </style>
 
-Correlation Matrix between Variables：
+Correlation Matrix between Variable
 
 ```{r}
 library(dplyr)
@@ -782,7 +780,7 @@ Error term (ε_t):
 Represents the residual variance at time t. It captures the unobserved factors, random shocks, or measurement errors that affect the dependent variable at that specific time period but are not included in the model.
 
 ---
-## Regression Table for the Study of Factors Associated with Mental Health patient rates in Scotland
+## Regression Table for the Study of Factors Associated with Mental Health Patients Rates in Scotland
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 library(dplyr)
 
@@ -943,19 +941,19 @@ Residual Diagnostics of the Multiple Linear Regression Model
   text-align: left;
   white-space: pre-line;
 ">
-*Residuals vs Fitted Plot：
+- Residuals vs Fitted Plot：
 Most residuals are distributed around the zero line. However, the red line shows some fluctuations and is not completely horizontal. There are also some relatively large residuals. This suggests that the model may not fully capture the linear relationship between the variables.
 
-*Normal Q-Q Plot：
+- Normal Q-Q Plot：
 Most points follow the general pattern of the reference line. However, several points deviate from the line, especially in the upper tail. This suggests that the residuals may not fully follow a normal distribution.
 
-*Scale-Location Plot：
+- Scale-Location Plot：
 The red line shows a slight upward trend, especially at higher fitted values. The spread of the points is not completely consistent across the fitted values. This suggests that the model may have a heteroscedasticity problem, meaning that the error variance is not constant. HC3 robust standard errors can help improve the reliability of statistical inference.
 
-*Residuals vs Leverage Plot：
+- Residuals vs Leverage Plot：
 Most observations are clustered within a similar leverage range. However, a few observations have relatively higher leverage or larger standardized residuals. These observations may influence the model, so they should be further examined using Cook's Distance.
 
-*Overall Conclusion：
+Overall Conclusion：
 Overall, the multiple linear regression model examines the associations between PatientsRates and deprivation gap, mean discharge rates, age group, and sex. The Residuals vs Fitted Plot shows some fluctuations, suggesting that the model may not fully capture the relationship between the variables. The Normal Q-Q Plot indicates that some residuals deviate from the reference line, particularly in the upper tail, suggesting that the residuals may not follow a normal distribution. The Scale-Location Plot shows a slight upward trend, indicating possible heteroscedasticity. In addition, the Residuals vs Leverage Plot identifies a few observations with relatively high leverage or large standardized residuals, which should be further examined using Cook's Distance. HC3 robust standard errors can help improve the reliability of statistical inference, particularly when heteroscedasticity is present. Therefore, the model is useful but could be improved further.
 
 </div>
@@ -981,7 +979,8 @@ However, the diagnostic plots indicate some deviations from standard assumptions
 </div>
 
 ---
-Sensitivity Analysis for Linear Regression
+#Sensitivity Analysis for Linear Regression
+
 ```{r}
 
 
@@ -1000,24 +999,28 @@ Sensitivity Analysis for Linear Regression
 Factors Associated with Patient Rates (PR) and Their Relationships:
 The regression results indicate that all independent variables are statistically significant in relation to mental health patient rates. Specifically:
 
-Deprivation Gap: There is a significant negative relationship（β=−0.3681,p<0.001). Higher levels of deprivation gap are associated with lower patient rates.
+- Deprivation Gap: There is a significant negative relationship（β=−0.3681,p<0.001). Higher levels of deprivation gap are associated with lower patient rates.
 
-DischargeRates: There is a significant positive relationship (β=0.3218,Deprivation Gap: There is a significant negative relationship (β = -0.3681, p < 0.001)). Higher discharge rates are associated with higher patient rates.
+- Discharge Rates: There is a significant positive relationship (β=0.3218,Deprivation Gap: There is a significant negative relationship (β = -0.3681, p < 0.001)). Higher discharge rates are associated with higher patient rates.
 
-Age Group: Compared to the reference group (0-17 years), older age groups show significantly higher patient rates. The disparity increases with age, peaking at the 65plus group, which has a substantially higher rate (β=797.5376,p<0.001).
-Sex: There is a significant positive relationship for males (β=105.4133,p<0.001). Specifically, males have an expected patient rate that is approximately 105.4 units higher than females (the reference group).
+- Age Group: Compared to the reference group (0-17 years), older age groups show significantly higher patient rates. The disparity increases with age, peaking at the 65plus group, which has a substantially higher rate (β=797.5376,p<0.001).
 
+- Sex: There is a significant positive relationship for males (β=105.4133,p<0.001). Specifically, males have an expected patient rate that is approximately 105.4 units higher than females (the reference group).
+---
 Government Policy Implications:
-Given these findings, the Scottish Government can use this evidence to implement targeted interventions. The government should prioritize allocating mental health resources and preventative support to older adults (especially those age groupd 65 and over) and males, as these groups exhibit significantly higher patient rates. Furthermore, understanding the positive correlation between discharge rates and patient rates could help policymakers evaluate the effectiveness of current hospital discharge pathways and community care transitions, ensuring that high-risk demographic groups receive adequate follow-up care to reduce readmission and overall prevalence.
+Given these findings, the government can formulate new policies to effectively reduce the incidence of mental illness. 
+
+- The government should prioritize allocating mental health resources and preventative support to older adults (especially those age group 65 and over) and males, as these groups exhibit significantly higher patient rates. 
+
+- Furthermore, understanding the positive correlation between discharge rates and patient rates could help policymakers evaluate the effectiveness of current hospital discharge pathways and community care transitions, ensuring that high-risk demographic groups receive adequate follow-up care to reduce readmission and overall prevalence.
 
 ---
 Limitations
 
 Despite the strong predictive power of the model (R square=0.9073), this study has several limitations:
 
-Limited Temporal Data: The dataset covers a relatively short time frame (limited number of years). This restricts the model's ability to capture long-term trends, structural breaks, or delayed effects of socioeconomic changes on mental health patient rates over time.
+- Limited Temporal Data: The dataset covers a relatively short time frame (limited number of years). This restricts the model's ability to capture long-term trends, structural breaks, or delayed effects of socioeconomic changes on mental health patient rates over time.
 
-Omission of Other Influencing Factors: **Omission of Other Influencing Factors:**
+- Omission of Other Influencing Factors: Omission of Other Influencing Factors
 
 The model includes the Deprivation Gap (the discharge-rate difference between SIMD 1 and SIMD 5), mean discharge rates, age group, and sex. However, other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included. These omitted variables may also influence mental health patient rates. Other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included.
-
