@@ -1,6 +1,6 @@
 ---
 title: "The Factors That Influence the Patients Rates"
-subtitle: "Recovery of the Relationship between Sex, Age, Deprivation，Discharge Rates and Patients Rates "
+subtitle: "Recovery of the Relationship between Sex, Age Group, Deprivation，Discharge Rates and Patients Rates "
 author: "NO.1: Zimo Zhou, Chuqing Shi, Shuchen Zhang"
 institute: "University of Edinburgh"
 date: "11.10"
@@ -170,7 +170,7 @@ class: middle
   margin-top: 50px;
 ">
 
-Investigating the factors influencing patient rates can assist the Scottish Government in implementing targeted interventions for potential mental health patients (e.g., based on gender, age, and level of deprivation). This will help reduce the incidence of mental illness.
+Investigating the factors influencing patient rates can assist the Scottish Government in implementing targeted interventions for potential mental health patients (e.g., based on gender, age group, and level of deprivation). This will help reduce the incidence of mental illness.
 
 </div>
 ]
@@ -262,7 +262,7 @@ class: middle
 }
 </style>
 
-## Boxplot for the Study of Mental Health Inpatient Rates across Sex Groups in Scotland
+## Boxplot for the Study of Mental Health patient rates across Sex Groups in Scotland
 ```{r sex-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
 
@@ -274,7 +274,7 @@ ggplot(age.sex,
            fill = factor(Sex))) +
   geom_boxplot(alpha = 0.7, na.rm = TRUE) +
   labs(
-    title = "Mental Health Inpatient Rates by Sex",
+    title = "Mental Health patient rates by Sex",
     subtitle = "Comparison of Patient Rates Across Sex Groups",
     x = "Sex",
     y = "Patients per 100,000 Population"
@@ -284,8 +284,6 @@ ggplot(age.sex,
 ```
 
 ---
-
-
 
 <style>
 .remark-slide-content table {
@@ -301,7 +299,7 @@ ggplot(age.sex,
   line-height: 1.15 !important;
 }
 </style>
-## Boxplot for the Study of Mental Health Inpatient Rates across Age Groups in Scotland
+## Boxplot for the Study of Mental Health patient rates across Age Groups in Scotland
 
 ```{r age-boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=3.5, out.width="75%", fig.align="center"}
 library(tidyverse)
@@ -331,7 +329,7 @@ ggplot(age_plot,
            fill = AgeGroup)) +
   geom_boxplot(alpha = 0.7) +
   labs(
-    title = "Mental Health Inpatient Rates by Age Group",
+    title = "Mental Health patient rates by Age Group",
     subtitle = "Comparison Across Age Groups",
     x = "Age Group",
     y = "Patients per 100,000 Population"
@@ -363,7 +361,7 @@ class: middle,center
   line-height: 1.2 !important;
 }
 </style>
-## Summary Table for the Study of Mental Health Inpatient Rates across Deprivation Gap, Age Groups, and Sex in Scotland
+## Summary Table for the Study of Mental Health patient rates across Deprivation Gap, Age Groups, and Sex in Scotland
 ---
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5, out.width="85%"}
 library(dplyr)
@@ -623,7 +621,7 @@ ggplot(
 - Males have a larger IQR than females.
 
 *Prediction for Regression
-- We expect age, sex and discharge rates to be related to patient rates.
+- We expect age group, sex and discharge rates to be related to patient rates.
 - Older age groups and males may have higher patient rates.
 
 *Scatter Plot Trend
@@ -784,7 +782,7 @@ Error term (ε_t):
 Represents the residual variance at time t. It captures the unobserved factors, random shocks, or measurement errors that affect the dependent variable at that specific time period but are not included in the model.
 
 ---
-## Regression Table for the Study of Factors Associated with Mental Health Inpatient Rates in Scotland
+## Regression Table for the Study of Factors Associated with Mental Health patient rates in Scotland
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 library(dplyr)
 
@@ -1000,16 +998,17 @@ Sensitivity Analysis for Linear Regression
 ---
 #Conclusion
 Factors Associated with Patient Rates (PR) and Their Relationships:
-The regression results indicate that all independent variables are statistically significant in relation to mental health inpatient patient rates. Specifically:
+The regression results indicate that all independent variables are statistically significant in relation to mental health patient rates. Specifically:
 
-SIMD: There is a significant negative relationship（β=−0.3681,p<0.001). Higher levels of socio-economic deprivation (or the specific SIMD indicator used) are associated with lower patient rates.
+Deprivation Gap: There is a significant negative relationship（β=−0.3681,p<0.001). Higher levels of deprivation gap are associated with lower patient rates.
+
 DischargeRates: There is a significant positive relationship (β=0.3218,Deprivation Gap: There is a significant negative relationship (β = -0.3681, p < 0.001)). Higher discharge rates are associated with higher patient rates.
 
-AgeGroup: Compared to the reference group (0-17 years), older age groups show significantly higher patient rates. The disparity increases with age, peaking at the 65plus group, which has a substantially higher rate (β=797.5376,p<0.001).
+Age Group: Compared to the reference group (0-17 years), older age groups show significantly higher patient rates. The disparity increases with age, peaking at the 65plus group, which has a substantially higher rate (β=797.5376,p<0.001).
 Sex: There is a significant positive relationship for males (β=105.4133,p<0.001). Specifically, males have an expected patient rate that is approximately 105.4 units higher than females (the reference group).
 
 Government Policy Implications:
-Given these findings, the Scottish Government can use this evidence to implement targeted interventions. The government should prioritize allocating mental health resources and preventative support to older adults (especially those aged 65 and over) and males, as these groups exhibit significantly higher patient rates. Furthermore, understanding the positive correlation between discharge rates and patient rates could help policymakers evaluate the effectiveness of current hospital discharge pathways and community care transitions, ensuring that high-risk demographic groups receive adequate follow-up care to reduce readmission and overall prevalence.
+Given these findings, the Scottish Government can use this evidence to implement targeted interventions. The government should prioritize allocating mental health resources and preventative support to older adults (especially those age groupd 65 and over) and males, as these groups exhibit significantly higher patient rates. Furthermore, understanding the positive correlation between discharge rates and patient rates could help policymakers evaluate the effectiveness of current hospital discharge pathways and community care transitions, ensuring that high-risk demographic groups receive adequate follow-up care to reduce readmission and overall prevalence.
 
 ---
 Limitations
@@ -1020,5 +1019,5 @@ Limited Temporal Data: The dataset covers a relatively short time frame (limited
 
 Omission of Other Influencing Factors: **Omission of Other Influencing Factors:**
 
-The model includes the Deprivation Gap (the discharge-rate difference between SIMD 1 and SIMD 5), mean discharge rates, age group, and sex. However, other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included. These omitted variables may also influence mental health inpatient rates. Other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included.
+The model includes the Deprivation Gap (the discharge-rate difference between SIMD 1 and SIMD 5), mean discharge rates, age group, and sex. However, other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included. These omitted variables may also influence mental health patient rates. Other potentially important factors, such as healthcare resources, physical health conditions, and broader socioeconomic characteristics, are not included.
 
