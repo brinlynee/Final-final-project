@@ -206,7 +206,7 @@ variable_table <- data.frame(
     "Refers to the patient's age on admission. Ages have been arranged in five different groups.",
     "The annual number of discharges relative to the size of the population, expressed per 100,000 population.",
     "The annual number of patients relative to the size of the population, expressed per 100,000 population.",
-    "The deprivation gap is calculated as DR_SIMD_1 minus DR_SIMD_5 (SIMD1 - SIMD5).The Scottish Index of Multiple Deprivation (SIMD) identifies concentrations of multiple deprivation across Scotland. Data zones are arranged into five groups, from the most deprived (1) to the least deprived (5).DR_SIMD_1 means the deprivtaion which in the area with SIMD 1,DR_SIMD_5 means the deprivtaion which in the area with SIMD 5 "
+    "The deprivation gap is calculated as DR_SIMD_1 minus DR_SIMD_5 (SIMD1 - SIMD5).The Scottish Index of Multiple Deprivation (SIMD) identifies concentrations of multiple deprivation across Scotland. Data zones are arranged into five groups, from the most deprived (1) to the least deprived (5). DR_SIMD_1 means the discharge rates in the most deprived areas, which DR_SIMD_5 represents the discharge rates in the least deprived areas. "
   )
 )
 
